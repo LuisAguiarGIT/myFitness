@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { clearInterval } from 'timers';
 
 export default function Timer() {
   const [timeElapsed, setTimeElapsed] = useState(0);
