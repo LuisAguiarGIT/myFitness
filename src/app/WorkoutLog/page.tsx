@@ -25,10 +25,7 @@ export default function WorkoutLog() {
             {data.workoutName}
           </h1>
           <div className="relative">
-            <div
-              onClick={triggerTimer}
-              className="absolute inset-0 z-10 cursor-pointer"
-            >
+            <div onClick={triggerTimer} className="inset-0 z-10 cursor-pointer">
               <Timer isRunning={isRunning} />
             </div>
           </div>

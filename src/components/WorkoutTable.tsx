@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 export type Set = {
   set: number;
@@ -22,85 +17,7 @@ const setsArray = [
 ];
 
 export default function WorkoutTable() {
-  const columnHelper = createColumnHelper<Set>();
-
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('set', {
-        header: () => 'SET',
-        cell: (info) => (
-          <div className="bg-[#2A2A2A] text-center rounded-md py-2 font-semibold text-[#F3FFCA]">
-            {info.getValue()}
-          </div>
-        ),
-      }),
-      columnHelper.accessor('previous', {
-        header: () => 'PREVIOUS',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('weight', {
-        header: () => 'WEIGHT',
-        cell: (info) => {
-          const value = info.getValue();
-          const rowIndex = info.row.index;
-
-          return (
-            <input
-              className="p-4 w-1/2 text-center text-xl bg-[#262626] rounded-md"
-              type="text"
-              value={value}
-              onChange={(e) => updateSet(rowIndex, 'weight', e.target.value)}
-            />
-          );
-        },
-      }),
-      columnHelper.accessor('reps', {
-        header: () => 'REPS',
-        cell: (info) => {
-          const value = info.getValue();
-          const rowIndex = info.row.index;
-
-          return (
-            <input
-              className="p-4 w-1/2 text-center text-xl bg-[#262626] rounded-md"
-              type="text"
-              value={value}
-              onChange={(e) => updateSet(rowIndex, 'reps', e.target.value)}
-            />
-          );
-        },
-      }),
-      columnHelper.accessor('done', {
-        header: () => null,
-        cell: (info) => {
-          const value = info.getValue();
-          const rowIndex = info.row.index;
-
-          return (
-            <div className="flex justify-center">
-              <div
-                onClick={() => updateSet(rowIndex, 'done', !value)}
-                className={`w-10 h-10 rounded-md flex items-center justify-center text-sm
-            ${value ? 'bg-[#F3FFCA] text-black' : 'bg-[#2A2A2A] text-transparent'}
-          `}
-              >
-                ✓
-              </div>
-            </div>
-          );
-        },
-      }),
-    ],
-    [],
-  );
-
   const [sets, setSets] = useState(setsArray);
-  const table = useReactTable({
-    data: sets,
-    columns,
-    debugTable: true,
-    getCoreRowModel: getCoreRowModel(),
-  });
 
   function updateSet<K extends keyof Set>(
     index: number,
