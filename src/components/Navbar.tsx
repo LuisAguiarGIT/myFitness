@@ -18,7 +18,6 @@ export default function Navbar() {
           </h1>
         </div>
         <div className="flex items-center">
-          <Timer className="mr-4" />
           <Bell className="stroke-[#cafd00]" />
         </div>
       </div>

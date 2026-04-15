@@ -2,16 +2,22 @@
 
 import { useEffect, useState } from 'react';
 
-export default function Timer() {
-  const [timeElapsed, setTimeElapsed] = useState(0);
+interface ITimerProps {
+  isRunning: boolean;
+}
+
+export default function Timer({ isRunning }: ITimerProps) {
+  const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
+    if (!isRunning) return;
+
     const interval = setInterval(() => {
-      setTimeElapsed((prev) => prev + 1);
+      setSeconds((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isRunning]);
 
   const formatTime = (totalSeconds: number) => {
     const hours = Math.floor(totalSeconds / 3600)
@@ -27,7 +33,7 @@ export default function Timer() {
   return (
     <div className="flex items-center justify-center mr-2">
       <div className="bg-[#692701]/60 text-[#FC5B00] font-label text-secondary font-bold text-sm bg-secondary-container/20 px-3 py-1 rounded-md">
-        {formatTime(timeElapsed)}
+        {formatTime(seconds)}
       </div>
     </div>
   );
