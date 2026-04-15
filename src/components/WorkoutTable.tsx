@@ -2,7 +2,6 @@
 
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
@@ -11,15 +10,15 @@ import { useState, useMemo } from 'react';
 export type Set = {
   set: number;
   previous: string;
-  weight: number;
-  reps: number;
+  weight: string;
+  reps: string;
   done: boolean;
 };
 
 const setsArray = [
-  { set: 1, previous: '100 kg x 8', weight: 105, reps: 8, done: true },
-  { set: 2, previous: '100 kg x 8', weight: 105, reps: 7, done: false },
-  { set: 3, previous: '100 kg x 7', weight: 105, reps: 6, done: false },
+  { set: 1, previous: '100 kg x 8', weight: '105', reps: '8', done: true },
+  { set: 2, previous: '100 kg x 8', weight: '105', reps: '7', done: false },
+  { set: 3, previous: '100 kg x 7', weight: '105', reps: '6', done: false },
 ];
 
 export default function WorkoutTable() {
@@ -47,11 +46,10 @@ export default function WorkoutTable() {
 
           return (
             <input
-              type="number"
+              className="p-4 w-1/2 text-center text-xl bg-[#262626] rounded-md"
+              type="text"
               value={value}
-              onChange={(e) =>
-                updateSet(rowIndex, 'weight', Number(e.target.value))
-              }
+              onChange={(e) => updateSet(rowIndex, 'weight', e.target.value)}
             />
           );
         },
@@ -64,11 +62,10 @@ export default function WorkoutTable() {
 
           return (
             <input
-              type="number"
+              className="p-4 w-1/2 text-center text-xl bg-[#262626] rounded-md"
+              type="text"
               value={value}
-              onChange={(e) =>
-                updateSet(rowIndex, 'reps', Number(e.target.value))
-              }
+              onChange={(e) => updateSet(rowIndex, 'reps', e.target.value)}
             />
           );
         },
@@ -128,8 +125,8 @@ export default function WorkoutTable() {
     const newSet: Set = {
       set: getSetNumber,
       previous: getPreviousVolume(),
-      weight: 0,
-      reps: 0,
+      weight: '',
+      reps: '',
       done: false,
     };
 
@@ -139,51 +136,79 @@ export default function WorkoutTable() {
   return (
     <div className="bg-[#131313] p-4 mt-4 rounded-xl">
       <h1 className="text-2xl font-bold text-[#F3FFCA]">BARBELL BENCH PRESS</h1>
-      <div className="flex text-xs font-semibold tracking-wider text-gray-300/80">
-        <span>Last Session: 100kg x 8</span>
+
+      <div className="text-xs text-gray-300/80 font-semibold mt-1">
+        Last Session: 100kg x 8
       </div>
-      <div className="pt-4">
-        <table className="w-full border-separate border-spacing-y-2 border-spacing-x-0 text-xs">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="whitespace-nowrap p-2 text-left font-normal text-gray-100"
-                  >
-                    <div className="p-2">
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="p-3 text-gray-200 bg-[#1A1A1A] first:rounded-l-lg last:rounded-r-lg"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      {/* HEADER */}
+      <div className="grid grid-cols-5 text-xs text-gray-400 mt-4 mb-2 px-2">
+        <div className="text-leftr">SET</div>
+        <div className="text-left">PREVIOUS</div>
+        <div className="text-center">WEIGHT</div>
+        <div className="text-center">REPS</div>
+        <div className="text-center"></div>
       </div>
+
+      {/* ROWS */}
+      <div className="space-y-2">
+        {sets.map((row, index) => (
+          <div
+            key={row.set}
+            className="grid grid-cols-5 items-center bg-[#1A1A1A] rounded-lg p-3"
+          >
+            {/* SET */}
+            <div className="mr-2">
+              <div className="bg-[#2A2A2A] w-full h-10 flex items-center justify-center rounded-md text-[#F3FFCA] font-semibold">
+                {row.set}
+              </div>
+            </div>
+
+            {/* PREVIOUS */}
+            <div className="text-[#959393] text-sm">{row.previous}</div>
+
+            {/* WEIGHT */}
+            <div className="flex justify-center">
+              <input
+                className="w-16 bg-[#2A2A2A] text-center rounded-md py-2 outline-none text-gray-200"
+                value={row.weight}
+                onChange={(e) => updateSet(index, 'weight', e.target.value)}
+              />
+            </div>
+
+            {/* REPS */}
+            <div className="flex justify-center">
+              <input
+                className="w-16 bg-[#2A2A2A] text-center rounded-md py-2 outline-none text-gray-200"
+                value={row.reps}
+                onChange={(e) => updateSet(index, 'reps', e.target.value)}
+              />
+            </div>
+
+            {/* DONE */}
+            <div className="flex justify-center">
+              <button
+                onClick={() => updateSet(index, 'done', !row.done)}
+                className={`w-10 h-10 rounded-md flex items-center justify-center transition
+                  ${
+                    row.done
+                      ? 'bg-[#F3FFCA] text-black'
+                      : 'bg-[#2A2A2A] text-transparent'
+                  }`}
+              >
+                ✓
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ADD BUTTON */}
       <button
-        className="w-full rounded-xs border border-dashed h-16 cursor-pointer mt-4 transition delay-150 hover:bg-[#0E0E0E]"
+        className="w-full border border-dashed h-16 mt-4 rounded-lg hover:bg-[#0E0E0E] transition"
         onClick={addNewSet}
       >
-        <p className="font-bold text-gray-300/80">+ ADD SET</p>
+        <p className="text-gray-300 font-bold">+ ADD SET</p>
       </button>
     </div>
   );
