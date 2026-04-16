@@ -2,6 +2,16 @@
 
 import { useState } from 'react';
 
+interface IWorkoutProps {
+  exercise: Exercise;
+}
+
+interface Exercise {
+  id: number;
+  name: string;
+  sets: number;
+}
+
 export type Set = {
   set: number;
   previous: string;
@@ -10,7 +20,7 @@ export type Set = {
   done: boolean;
 };
 
-export default function WorkoutTable() {
+export default function WorkoutTable({ exercise }: IWorkoutProps) {
   const setsArray = new Array<Set>();
 
   const [sets, setSets] = useState(setsArray);
@@ -50,7 +60,9 @@ export default function WorkoutTable() {
 
   return (
     <div className="bg-[#131313] p-4 mt-4 rounded-xl">
-      <h1 className="text-2xl font-bold text-[#F3FFCA]">BARBELL BENCH PRESS</h1>
+      <h1 className="text-2xl font-bold text-[#F3FFCA]">
+        {exercise.name.toUpperCase()}
+      </h1>
 
       <div className="text-xs text-gray-300/80 font-semibold mt-1">
         Last Session: 100kg x 8

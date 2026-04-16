@@ -13,10 +13,15 @@ const data = {
 
 export default function WorkoutLog() {
   const exerciseList = [
-    { exerciseName: 'Incline DB Press', sets: 3, reps: 10 },
-    { exerciseName: 'Lateral Raises', sets: 3, reps: 15 },
+    { name: 'Incline DB Press', sets: 3, reps: 10 },
+    { name: 'Lateral Raises', sets: 3, reps: 15 },
   ];
 
+  const workoutExerciseList = [
+    { id: 1, name: 'Barbell Bench Press', sets: 3, reps: 8 },
+  ];
+
+  const [workoutList, setWorkoutList] = useState(workoutExerciseList);
   const [isRunning, setIsRunning] = useState(false);
 
   function triggerTimer() {
@@ -42,14 +47,28 @@ export default function WorkoutLog() {
           <span>VOLUME: {data.volume} KG</span>
         </div>
         <div>
-          <WorkoutTable />
+          {workoutList.map((exercise) => (
+            <WorkoutTable key={exercise.id} exercise={exercise} />
+          ))}
         </div>
         <div>
           <h1 className="mt-4 font-bold text-xl text-[#959393]">UP NEXT</h1>
         </div>
         <div>
           {exerciseList.map((exercise, i) => (
-            <ExerciseCard key={i} {...exercise} />
+            <ExerciseCard
+              key={i}
+              {...exercise}
+              onAdd={() => {
+                setWorkoutList((prev) => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    ...exercise,
+                  },
+                ]);
+              }}
+            />
           ))}
         </div>
       </div>
