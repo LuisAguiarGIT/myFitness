@@ -1,5 +1,6 @@
 'use client';
 
+import ExerciseCard from '@/components/ExerciseCard';
 import Timer from '../../components/Timer';
 import WorkoutTable from '@/components/WorkoutTable';
 import { useState } from 'react';
@@ -11,6 +12,11 @@ const data = {
 };
 
 export default function WorkoutLog() {
+  const exerciseList = [
+    { exerciseName: 'Incline DB Press', sets: 3, reps: 10 },
+    { exerciseName: 'Lateral Raises', sets: 3, reps: 15 },
+  ];
+
   const [isRunning, setIsRunning] = useState(false);
 
   function triggerTimer() {
@@ -37,6 +43,14 @@ export default function WorkoutLog() {
         </div>
         <div>
           <WorkoutTable />
+        </div>
+        <div>
+          <h1 className="mt-4 font-bold text-xl text-[#959393]">UP NEXT</h1>
+        </div>
+        <div>
+          {exerciseList.map((exercise, i) => (
+            <ExerciseCard key={i} {...exercise} />
+          ))}
         </div>
       </div>
     </div>

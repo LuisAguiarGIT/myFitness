@@ -10,13 +10,9 @@ export type Set = {
   done: boolean;
 };
 
-const setsArray = [
-  { set: 1, previous: '100 kg x 8', weight: '105', reps: '8', done: true },
-  { set: 2, previous: '100 kg x 8', weight: '105', reps: '7', done: false },
-  { set: 3, previous: '100 kg x 7', weight: '105', reps: '6', done: false },
-];
-
 export default function WorkoutTable() {
+  const setsArray = new Array<Set>();
+
   const [sets, setSets] = useState(setsArray);
 
   function updateSet<K extends keyof Set>(
@@ -30,6 +26,8 @@ export default function WorkoutTable() {
   }
 
   function getPreviousVolume() {
+    if (sets.length === 0) return '';
+
     const getLastSet = sets[sets.length - 1];
 
     return `${getLastSet.weight} kg x ${getLastSet.reps}`;
