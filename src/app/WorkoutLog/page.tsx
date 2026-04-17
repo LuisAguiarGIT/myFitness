@@ -2,6 +2,7 @@
 
 import ExerciseCard from '@/components/ExerciseCard';
 import CustomExerciseCard from '@/components/CustomExerciseCard';
+import SubmitButton from '@/components/SubmitButton';
 import Timer from '../../components/Timer';
 import WorkoutTable from '@/components/WorkoutTable';
 import { useState } from 'react';
@@ -25,6 +26,10 @@ export default function WorkoutLog() {
     ],
   });
   const [isRunning, setIsRunning] = useState(false);
+
+  function submitCurrentWorkout() {
+    alert(JSON.stringify(workout));
+  }
 
   function addCustomExercise(name: string) {
     setWorkout((prev) => ({
@@ -80,6 +85,8 @@ export default function WorkoutLog() {
               onSetsChange={handleSetsChange}
             />
           ))}
+
+          <SubmitButton submit={submitCurrentWorkout} />
         </div>
         <div>
           <h1 className="mt-4 font-bold text-xl text-[#959393]">UP NEXT</h1>
