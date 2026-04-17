@@ -1,6 +1,7 @@
 'use client';
 
 import ExerciseCard from '@/components/ExerciseCard';
+import CustomExerciseCard from '@/components/CustomExerciseCard';
 import Timer from '../../components/Timer';
 import WorkoutTable from '@/components/WorkoutTable';
 import { useState } from 'react';
@@ -24,6 +25,21 @@ export default function WorkoutLog() {
     ],
   });
   const [isRunning, setIsRunning] = useState(false);
+
+  function addCustomExercise(name: string) {
+    setWorkout((prev) => ({
+      ...prev,
+      exercises: [
+        ...prev.exercises,
+        {
+          id: Date.now(),
+          name,
+          sets: [],
+          custom: true,
+        },
+      ],
+    }));
+  }
 
   function handleSetsChange(exerciseId: number, sets: WorkoutSet[]) {
     setWorkout((prev) => ({
@@ -88,6 +104,7 @@ export default function WorkoutLog() {
               }}
             />
           ))}
+          <CustomExerciseCard onAdd={addCustomExercise} />
         </div>
       </div>
     </div>
