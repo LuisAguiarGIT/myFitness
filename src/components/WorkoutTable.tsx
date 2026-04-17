@@ -1,38 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { WorkoutSet } from '@/types/workout';
 
 interface IWorkoutProps {
   exercise: Exercise;
+  onSetsChange?: (exerciseId: number, sets: WorkoutSet[]) => void;
 }
 
 interface Exercise {
   id: number;
   name: string;
-  sets: number;
+  sets: WorkoutSet[];
 }
 
-export type Set = {
-  set: number;
-  previous: string;
-  weight: string;
-  reps: string;
-  done: boolean;
-};
+export default function WorkoutTable({
+  exercise,
+  onSetsChange,
+}: IWorkoutProps) {
+  const sets = exercise.sets;
 
-export default function WorkoutTable({ exercise }: IWorkoutProps) {
-  const setsArray = new Array<Set>();
-
-  const [sets, setSets] = useState(setsArray);
-
-  function updateSet<K extends keyof Set>(
+  function updateSet<K extends keyof WorkoutSet>(
     index: number,
     key: K,
-    value: Set[K],
+    value: WorkoutSet[K],
   ) {
-    setSets((prev) =>
-      prev.map((row, i) => (i === index ? { ...row, [key]: value } : row)),
+    const updated = sets.map((row, i) =>
+      i === index ? { ...row, [key]: value } : row,
     );
+
+    onSetsChange?.(exercise.id, updated);
   }
 
   function getPreviousVolume() {
@@ -45,9 +41,9 @@ export default function WorkoutTable({ exercise }: IWorkoutProps) {
 
   function addNewSet() {
     const getSetNumber =
-      sets.length > 0 ? Math.max(...sets.map((element) => element.set)) + 1 : 1;
+      sets.length > 0 ? Math.max(...sets.map((e) => e.set)) + 1 : 1;
 
-    const newSet: Set = {
+    const newSet: WorkoutSet = {
       set: getSetNumber,
       previous: getPreviousVolume(),
       weight: '',
@@ -55,7 +51,8 @@ export default function WorkoutTable({ exercise }: IWorkoutProps) {
       done: false,
     };
 
-    setSets([...sets, newSet]);
+    const updated = [...sets, newSet];
+    onSetsChange?.(exercise.id, updated);
   }
 
   return (
@@ -70,8 +67,8 @@ export default function WorkoutTable({ exercise }: IWorkoutProps) {
 
       {/* HEADER */}
       <div className="grid grid-cols-5 text-xs text-gray-400 mt-4 mb-2 px-2">
-        <div className="text-leftr">SET</div>
-        <div className="text-left">PREVIOUS</div>
+        <div className="text-center">SET</div>
+        <div className="text-center">PREVIOUS</div>
         <div className="text-center">WEIGHT</div>
         <div className="text-center">REPS</div>
         <div className="text-center"></div>

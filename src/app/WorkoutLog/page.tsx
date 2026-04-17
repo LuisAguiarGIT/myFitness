@@ -4,12 +4,7 @@ import ExerciseCard from '@/components/ExerciseCard';
 import Timer from '../../components/Timer';
 import WorkoutTable from '@/components/WorkoutTable';
 import { useState } from 'react';
-
-const data = {
-  workoutName: 'PUSH DAY',
-  focus: 'Hypertrophy',
-  volume: '12,450',
-};
+import { WorkoutSet, Workout } from '@/types/workout';
 
 export default function WorkoutLog() {
   const exerciseList = [
@@ -17,12 +12,27 @@ export default function WorkoutLog() {
     { name: 'Lateral Raises', sets: 3, reps: 15 },
   ];
 
-  const workoutExerciseList = [
-    { id: 1, name: 'Barbell Bench Press', sets: 3, reps: 8 },
-  ];
-
-  const [workoutList, setWorkoutList] = useState(workoutExerciseList);
+  const [workout, setWorkout] = useState<Workout>({
+    name: 'PUSH DAY',
+    focus: 'Hypertrophy',
+    exercises: [
+      {
+        id: 1,
+        name: 'Barbell Bench Press',
+        sets: [],
+      },
+    ],
+  });
   const [isRunning, setIsRunning] = useState(false);
+
+  function handleSetsChange(exerciseId: number, sets: WorkoutSet[]) {
+    setWorkout((prev) => ({
+      ...prev,
+      exercises: prev.exercises.map((ex) =>
+        ex.id === exerciseId ? { ...ex, sets } : ex,
+      ),
+    }));
+  }
 
   function triggerTimer() {
     setIsRunning(!isRunning);
@@ -33,7 +43,7 @@ export default function WorkoutLog() {
       <div className="w-1/2 bg-[#0E0E0E] text-white">
         <div className="flex justify-between align-middle mt-2">
           <h1 className="font-semibold text-4xl tracking-tight">
-            {data.workoutName}
+            {workout.name}
           </h1>
           <div className="relative">
             <div onClick={triggerTimer} className="inset-0 z-10 cursor-pointer">
@@ -42,13 +52,17 @@ export default function WorkoutLog() {
           </div>
         </div>
         <div className="flex text-xs font-semibold tracking-wider pt-2 text-gray-300/80">
-          <span>{data.focus.toUpperCase()} FOCUS</span>
+          <span>{workout.focus.toUpperCase()} FOCUS</span>
           <span className="ml-1 mr-1">•</span>
-          <span>VOLUME: {data.volume} KG</span>
+          <span>VOLUME: 12,450 KG</span>
         </div>
         <div>
-          {workoutList.map((exercise) => (
-            <WorkoutTable key={exercise.id} exercise={exercise} />
+          {workout.exercises.map((exercise) => (
+            <WorkoutTable
+              key={exercise.id}
+              exercise={exercise}
+              onSetsChange={handleSetsChange}
+            />
           ))}
         </div>
         <div>
@@ -60,13 +74,17 @@ export default function WorkoutLog() {
               key={i}
               {...exercise}
               onAdd={() => {
-                setWorkoutList((prev) => [
+                setWorkout((prev) => ({
                   ...prev,
-                  {
-                    id: Date.now(),
-                    ...exercise,
-                  },
-                ]);
+                  exercises: [
+                    ...prev.exercises,
+                    {
+                      id: Date.now(),
+                      name: exercise.name,
+                      sets: [],
+                    },
+                  ],
+                }));
               }}
             />
           ))}
