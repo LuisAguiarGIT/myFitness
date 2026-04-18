@@ -3,12 +3,10 @@
 import ExerciseCard from '@/components/ExerciseCard';
 import CustomExerciseCard from '@/components/CustomExerciseCard';
 import SubmitButton from '@/components/SubmitButton';
-import Timer from '../../components/Timer';
+import Timer from '@/components/Timer';
 import WorkoutTable from '@/components/WorkoutTable';
-import { useState } from 'react';
-import { WorkoutSet, Workout } from '@/types/workout';
-import { useWorkoutTimer } from '../hooks/useWorkoutTimer';
-import { useWorkout } from '../hooks/useWorkout';
+import { useWorkoutTimer } from '../../hooks/useWorkoutTimer';
+import { useWorkout } from '../../hooks/useWorkout';
 
 export default function WorkoutLog() {
   const exerciseList = [
@@ -20,7 +18,7 @@ export default function WorkoutLog() {
     useWorkout({
       name: 'PUSH DAY',
       focus: 'Hypertrophy',
-      exercises: [{ id: 1, name: 'Barbell Bench Press', sets: [] }],
+      exercises: [],
     });
 
   const { seconds, isRunning, toggleTimer } = useWorkoutTimer();
