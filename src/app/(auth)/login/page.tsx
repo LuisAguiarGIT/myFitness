@@ -6,9 +6,13 @@ import { useState } from 'react';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
+    setLoading(true);
+    setError('');
 
     const res = await signIn('credentials', {
       email,
@@ -16,48 +20,71 @@ export default function LoginPage() {
       redirect: false,
     });
 
+    setLoading(false);
+
     if (res?.ok) {
-      window.location.href = '/';
+      window.location.href = '/WorkoutLog';
     } else {
-      alert('Invalid login');
+      setError('Invalid email or password');
     }
   }
 
   return (
-    <div className="bg-[#131313] w-1/3 h-1/3 rounded-xl">
-      <h1 className="flex justify-center text-white m-4 text-2xl">Login</h1>
+    <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4">
+      <div className="bg-[#131313] w-full max-w-md rounded-2xl p-6 shadow-lg border border-[#222]">
+        <h1 className="text-white text-2xl font-semibold text-center mb-6">
+          Welcome back
+        </h1>
 
-      <div className="m-4">
-        <form onSubmit={handleSubmit}>
-          <div className="text-[#898787]">
-            <h2>Email</h2>
+        {error && (
+          <div className="bg-red-500/10 border border-red-500 text-red-400 text-sm p-2 rounded-md mb-4 text-center">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email */}
+          <div>
+            <label className="text-[#aaa] text-sm">Email</label>
             <input
               type="email"
               placeholder="email@example.com"
-              className="bg-[#262626] rounded-md p-2 w-full mt-2"
+              className="bg-[#1f1f1f] text-white rounded-md p-3 w-full mt-1 outline-none focus:ring-2 focus:ring-[#CEFE00]"
               onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="mt-4 text-[#898787]">
-            <div className="flex justify-between items-center">
-              <h2>Password</h2>
-              <button className="text-[#E36B35] text-xs">
-                FORGOT PASSWORD?
-              </button>
-            </div>
-            <input
-              type="password"
-              placeholder="Password"
-              className="bg-[#262626] rounded-md p-2 w-full mt-2"
-              onChange={(e) => setPassword(e.target.value)}
+              value={email}
+              required
             />
           </div>
 
+          {/* Password */}
+          <div>
+            <div className="flex justify-between items-center">
+              <label className="text-[#aaa] text-sm">Password</label>
+              <button
+                type="button"
+                className="text-[#E36B35] text-xs hover:underline"
+              >
+                Forgot password?
+              </button>
+            </div>
+
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="bg-[#1f1f1f] text-white rounded-md p-3 w-full mt-1 outline-none focus:ring-2 focus:ring-[#CEFE00]"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              required
+            />
+          </div>
+
+          {/* Submit */}
           <button
             type="submit"
-            className="bg-[#CEFE00] w-full mt-8 p-4 rounded-md hover:cursor-pointer font-bold text-2xl text-[#556C00]"
+            disabled={loading}
+            className="bg-[#CEFE00] w-full py-3 rounded-md font-bold text-[#556C00] text-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            LOGIN
+            {loading ? 'Logging in...' : 'LOGIN'}
           </button>
         </form>
       </div>
