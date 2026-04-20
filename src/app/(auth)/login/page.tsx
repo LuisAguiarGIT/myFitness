@@ -1,6 +1,6 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { signIn } from '@/lib/auth-client';
 import { useState } from 'react';
 
 export default function LoginPage() {
@@ -14,17 +14,15 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    const res = await signIn('credentials', {
+    const { error } = await signIn.email({
       email,
       password,
-      redirect: false,
+      callbackURL: '/WorkoutLog',
     });
 
     setLoading(false);
 
-    if (res?.ok) {
-      window.location.href = '/WorkoutLog';
-    } else {
+    if (error) {
       setError('Invalid email or password');
     }
   }
@@ -43,7 +41,6 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Email */}
           <div>
             <label className="text-[#aaa] text-sm">Email</label>
             <input
@@ -56,18 +53,8 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Password */}
           <div>
-            <div className="flex justify-between items-center">
-              <label className="text-[#aaa] text-sm">Password</label>
-              <button
-                type="button"
-                className="text-[#E36B35] text-xs hover:underline"
-              >
-                Forgot password?
-              </button>
-            </div>
-
+            <label className="text-[#aaa] text-sm">Password</label>
             <input
               type="password"
               placeholder="••••••••"
@@ -78,7 +65,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
