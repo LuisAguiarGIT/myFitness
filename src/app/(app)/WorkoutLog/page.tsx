@@ -7,8 +7,16 @@ import Timer from '@/components/Timer';
 import WorkoutTable from '@/components/WorkoutTable';
 import { useWorkoutTimer } from '../../hooks/useWorkoutTimer';
 import { useWorkout } from '../../hooks/useWorkout';
+import { useSearchParams } from 'next/navigation';
+import { router } from 'better-auth/api';
+import { useRouter } from 'next/navigation';
 
 export default function WorkoutLog() {
+  const params = useSearchParams();
+  const name = params.get('name') ?? 'My Workout';
+  const focus = params.get('focus') ?? 'Hypertrophy';
+  const router = useRouter();
+
   const exerciseList = [
     { name: 'Incline DB Press', sets: 3, reps: 10 },
     { name: 'Lateral Raises', sets: 3, reps: 15 },
@@ -16,20 +24,33 @@ export default function WorkoutLog() {
 
   const { workout, setWorkout, addCustomExercise, handleSetsChange } =
     useWorkout({
-      name: 'PUSH DAY',
-      focus: 'Hypertrophy',
+      name,
+      focus,
       exercises: [],
     });
 
   const { seconds, isRunning, toggleTimer } = useWorkoutTimer();
 
-  function submitCurrentWorkout() {
+  async function submitCurrentWorkout() {
     const payload = {
-      ...workout,
+      name: workout.name,
+      focus: workout.focus,
       durationSeconds: seconds,
+      exercises: workout.exercises.map((exercise) => ({
+        name: exercise.name,
+        sets: exercise.sets,
+      })),
     };
 
-    alert(JSON.stringify(payload));
+    const res = await fetch('/api/workout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      router.push('/Dashboard');
+    }
   }
 
   return (
@@ -42,6 +63,7 @@ export default function WorkoutLog() {
             <Timer isRunning={isRunning} seconds={seconds} />
           </div>
         </div>
+        <h2 className="">{focus}</h2>
 
         {workout.exercises.map((exercise) => (
           <WorkoutTable

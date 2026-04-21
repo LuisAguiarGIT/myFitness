@@ -61,9 +61,9 @@ export default function WorkoutTable({
         {exercise.name.toUpperCase()}
       </h1>
 
-      <div className="text-xs text-gray-300/80 font-semibold mt-1">
+      {/* <div className="text-xs text-gray-300/80 font-semibold mt-1">
         Last Session: 100kg x 8
-      </div>
+      </div> */}
 
       {/* HEADER */}
       <div className="grid grid-cols-5 text-xs text-gray-400 mt-4 mb-2 px-2">

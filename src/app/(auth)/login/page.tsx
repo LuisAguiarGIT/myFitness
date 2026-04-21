@@ -17,7 +17,7 @@ export default function LoginPage() {
     const { error } = await signIn.email({
       email,
       password,
-      callbackURL: '/WorkoutLog',
+      callbackURL: '/Dashboard',
     });
 
     setLoading(false);
