@@ -3,11 +3,20 @@
 import { useSession } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import ActivityCard from '@/components/ActivityCard';
+
+interface IWorkoutProps {
+  name: string;
+  focus: string;
+  durationSeconds: number;
+  createdAt: string;
+}
 
 export default function Dashboard() {
   const { data: session } = useSession();
   const user = session?.user;
   const [quote, setQuote] = useState('');
+  const [workouts, setWorkouts] = useState<IWorkoutProps[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [workoutName, setWorkoutName] = useState('');
   const [workoutFocus, setWorkoutFocus] = useState('');
@@ -27,6 +36,10 @@ export default function Dashboard() {
       .then((data) => {
         setQuote('\"' + data[0].q + '\"' + ' - ' + data[0].a);
       });
+
+    fetch('/api/getAllWorkouts')
+      .then((res) => res.json())
+      .then((data) => setWorkouts(data));
   }, []);
 
   return (
@@ -90,7 +103,16 @@ export default function Dashboard() {
           {/* Personal Record */}
         </div>
         <div className="col-span-2 bg-[#1a1a1a] rounded-xl p-6 h-56">
-          {/* Recent Activity */}
+          <h1>Recent activity</h1>
+          {workouts.map((workout, i) => (
+            <ActivityCard
+              key={i}
+              name={workout.name}
+              focus={workout.focus}
+              durationSeconds={workout.durationSeconds}
+              createdAt={workout.createdAt}
+            />
+          ))}
         </div>
       </div>
 
