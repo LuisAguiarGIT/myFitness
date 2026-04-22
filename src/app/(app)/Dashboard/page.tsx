@@ -1,12 +1,13 @@
 'use client';
 
 import { useSession } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import NewWorkoutModal from '@/components/NewWorkoutModal';
 import ActivityCard from '@/components/ActivityCard';
+import TemplateModal from '@/components/TemplateModal';
 
 interface IWorkoutProps {
+  id: string;
   name: string;
   focus: string;
   durationSeconds: number;
@@ -19,6 +20,9 @@ export default function Dashboard() {
   const [quote, setQuote] = useState('');
   const [workouts, setWorkouts] = useState<IWorkoutProps[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [templateWorkoutId, setTemplateWorkoutId] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     fetch('/api/quote')
@@ -34,6 +38,13 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] p-6 text-white">
+      {templateWorkoutId && (
+        <TemplateModal
+          workoutId={templateWorkoutId}
+          onClose={() => setTemplateWorkoutId(null)}
+        />
+      )}
+
       {/* Modal */}
       {showModal && <NewWorkoutModal setShowModal={setShowModal} />}
 
@@ -63,10 +74,12 @@ export default function Dashboard() {
           {workouts.map((workout, i) => (
             <ActivityCard
               key={i}
+              id={workout.id}
               name={workout.name}
               focus={workout.focus}
               durationSeconds={workout.durationSeconds}
               createdAt={workout.createdAt}
+              onUseAsTemplate={(id) => setTemplateWorkoutId(id)}
             />
           ))}
         </div>

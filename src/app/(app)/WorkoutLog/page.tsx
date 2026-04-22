@@ -15,6 +15,7 @@ interface IExercise {
   name: string;
   sets: number;
   reps: number;
+  weight: number;
 }
 
 export default function WorkoutLog() {
@@ -22,27 +23,9 @@ export default function WorkoutLog() {
   const name = params.get('name') ?? 'My Workout';
   const focus = params.get('focus') ?? 'Hypertrophy';
   const tags = params.get('tags') ?? '';
+  const template = params.get('template');
   const router = useRouter();
   const [exercises, setExercises] = useState<IExercise[]>([]);
-
-  useEffect(() => {
-    fetch(`/api/getExercisesByTags?tags=${tags}`)
-      .then((res) => res.json())
-      .then((data) =>
-        setExercises(
-          data.map((exercise: IExercise) => ({
-            name: exercise.name,
-            sets: exercise.sets,
-            reps: exercise.reps,
-          })),
-        ),
-      );
-  }, [tags]);
-
-  // const exerciseList = [
-  //   { name: 'Incline DB Press', sets: 3, reps: 10 },
-  //   { name: 'Lateral Raises', sets: 3, reps: 15 },
-  // ];
 
   const { workout, setWorkout, addCustomExercise, handleSetsChange } =
     useWorkout({
@@ -50,6 +33,37 @@ export default function WorkoutLog() {
       focus,
       exercises: [],
     });
+
+  useEffect(() => {
+    if (template) {
+      const parsed = JSON.parse(decodeURIComponent(template));
+      setWorkout((prev) => ({
+        ...prev,
+        exercises: parsed.map((e: IExercise, i: number) => ({
+          id: Date.now() + i,
+          name: e.name,
+          sets: Array.from({ length: e.sets }, (_, i) => ({
+            set: i + 1,
+            previous: `${e.weight} kg x ${e.reps}`,
+            reps: e.reps,
+            weight: e.weight ?? 0,
+          })),
+        })),
+      }));
+    } else if (tags) {
+      fetch(`/api/getExercisesByTags?tags=${tags}`)
+        .then((res) => res.json())
+        .then((data) =>
+          setExercises(
+            data.map((exercise: IExercise) => ({
+              name: exercise.name,
+              sets: exercise.sets,
+              reps: exercise.reps,
+            })),
+          ),
+        );
+    }
+  }, [tags, template, setWorkout]);
 
   const { seconds, isRunning, toggleTimer } = useWorkoutTimer();
 

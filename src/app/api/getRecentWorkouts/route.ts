@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const filterDate = new Date().getDate() - 2;
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
   if (!session) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
@@ -12,6 +12,7 @@ export async function GET() {
 
   const workouts = await prisma.workout.findMany({
     select: {
+      id: true,
       name: true,
       focus: true,
       durationSeconds: true,
@@ -20,7 +21,7 @@ export async function GET() {
     where: {
       userId: session.user.id,
       createdAt: {
-        gte: new Date(filterDate),
+        gte: new Date(sevenDaysAgo),
       },
     },
     orderBy: { createdAt: 'desc' },
