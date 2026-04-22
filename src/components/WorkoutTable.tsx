@@ -1,10 +1,12 @@
 'use client';
 
 import { WorkoutSet } from '@/types/workout';
+import { Trash2 } from 'lucide-react';
 
 interface IWorkoutProps {
   exercise: Exercise;
   onSetsChange?: (exerciseId: number, sets: WorkoutSet[]) => void;
+  deleteSet: () => void;
 }
 
 interface Exercise {
@@ -16,6 +18,7 @@ interface Exercise {
 export default function WorkoutTable({
   exercise,
   onSetsChange,
+  deleteSet,
 }: IWorkoutProps) {
   const sets = exercise.sets;
 
@@ -57,9 +60,15 @@ export default function WorkoutTable({
 
   return (
     <div className="bg-[#131313] p-4 mt-4 rounded-xl">
-      <h1 className="text-2xl font-bold text-[#F3FFCA]">
-        {exercise.name.toUpperCase()}
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-[#F3FFCA]">
+          {exercise.name.toUpperCase()}
+        </h1>
+        <Trash2
+          className="stroke-[#cafd00] hover:cursor-pointer"
+          onClick={deleteSet}
+        />
+      </div>
 
       {/* <div className="text-xs text-gray-300/80 font-semibold mt-1">
         Last Session: 100kg x 8

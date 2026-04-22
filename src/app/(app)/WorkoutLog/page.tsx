@@ -106,6 +106,12 @@ export default function WorkoutLog() {
             key={exercise.id}
             exercise={exercise}
             onSetsChange={handleSetsChange}
+            deleteSet={() =>
+              setWorkout((prev) => ({
+                ...prev,
+                exercises: prev.exercises.filter((e) => e.id !== exercise.id),
+              }))
+            }
           />
         ))}
 
