@@ -114,3 +114,26 @@ model Set {
   @@index([exerciseId])
   @@map("set")
 }
+
+model ExerciseBank {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  reps      Int       @default(0)
+  sets      Int       @default(0)  
+  tags ExerciseBank_Tag[]
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  exerciseBanks ExerciseBank_Tag[]
+}
+
+model ExerciseBank_Tag {
+  exercisebank      ExerciseBank      @relation(fields: [exerciseBankId], references: [id])
+  exerciseBankId    String
+  tag               Tag               @relation(fields: [tagId], references: [id])
+  tagId             String
+
+  @@id([exerciseBankId, tagId])
+}

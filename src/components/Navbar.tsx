@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Timer, Bell } from 'lucide-react';
+import { Bell } from 'lucide-react';
 
 export default function Navbar() {
   return (

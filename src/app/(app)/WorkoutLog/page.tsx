@@ -8,19 +8,41 @@ import WorkoutTable from '@/components/WorkoutTable';
 import { useWorkoutTimer } from '../../hooks/useWorkoutTimer';
 import { useWorkout } from '../../hooks/useWorkout';
 import { useSearchParams } from 'next/navigation';
-import { router } from 'better-auth/api';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+
+interface IExercise {
+  name: string;
+  sets: number;
+  reps: number;
+}
 
 export default function WorkoutLog() {
   const params = useSearchParams();
   const name = params.get('name') ?? 'My Workout';
   const focus = params.get('focus') ?? 'Hypertrophy';
+  const tags = params.get('tags') ?? '';
   const router = useRouter();
+  const [exercises, setExercises] = useState<IExercise[]>([]);
 
-  const exerciseList = [
-    { name: 'Incline DB Press', sets: 3, reps: 10 },
-    { name: 'Lateral Raises', sets: 3, reps: 15 },
-  ];
+  useEffect(() => {
+    fetch(`/api/getExercisesByTags?tags=${tags}`)
+      .then((res) => res.json())
+      .then((data) =>
+        setExercises(
+          data.map((exercise: IExercise) => ({
+            name: exercise.name,
+            sets: exercise.sets,
+            reps: exercise.reps,
+          })),
+        ),
+      );
+  }, [tags]);
+
+  // const exerciseList = [
+  //   { name: 'Incline DB Press', sets: 3, reps: 10 },
+  //   { name: 'Lateral Raises', sets: 3, reps: 15 },
+  // ];
 
   const { workout, setWorkout, addCustomExercise, handleSetsChange } =
     useWorkout({
@@ -75,7 +97,7 @@ export default function WorkoutLog() {
 
         <SubmitButton submit={submitCurrentWorkout} />
 
-        {exerciseList.map((exercise, i) => (
+        {exercises.map((exercise, i) => (
           <ExerciseCard
             key={i}
             {...exercise}
