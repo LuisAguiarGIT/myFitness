@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import NewWorkoutModal from '@/components/NewWorkoutModal';
 import ActivityCard from '@/components/ActivityCard';
 import TemplateModal from '@/components/TemplateModal';
+import Link from 'next/link';
 
 interface IWorkoutProps {
   id: string;
@@ -70,7 +71,15 @@ export default function Dashboard() {
           {/* Personal Record */}
         </div>
         <div className="col-span-2 bg-[#1a1a1a] rounded-xl p-6">
-          <h1>Recent activity</h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-semibold">Recent activity</h1>
+            <Link
+              href="/History"
+              className="text-[#f3ffca] hover:underline hover:cursor-pointer"
+            >
+              View History
+            </Link>
+          </div>
           {workouts.map((workout, i) => (
             <ActivityCard
               key={i}

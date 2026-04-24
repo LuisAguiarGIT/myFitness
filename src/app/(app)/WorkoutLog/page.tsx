@@ -21,7 +21,7 @@ interface IExercise {
 export default function WorkoutLog() {
   const params = useSearchParams();
   const name = params.get('name') ?? 'My Workout';
-  const focus = params.get('focus') ?? 'Hypertrophy';
+  const [focus, setFocus] = useState(params.get('focus') ?? 'Hypertrophy');
   const tags = params.get('tags') ?? '';
   const template = params.get('template');
   const router = useRouter();
@@ -70,7 +70,7 @@ export default function WorkoutLog() {
   async function submitCurrentWorkout() {
     const payload = {
       name: workout.name,
-      focus: workout.focus,
+      focus: focus,
       durationSeconds: seconds,
       exercises: workout.exercises.map((exercise) => ({
         name: exercise.name,
@@ -93,13 +93,33 @@ export default function WorkoutLog() {
     <div className="flex justify-center h-screen">
       <div className="w-1/2 bg-[#0E0E0E] text-white">
         <div className="flex justify-between mt-2">
-          <h1 className="font-semibold text-4xl">{workout.name}</h1>
+          <h1
+            className="font-semibold text-4xl focus:outline-none"
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) => {
+              const text = e.currentTarget.textContent; // read synchronously before React clears it
+              setWorkout((prev) => ({ ...prev, name: text ?? prev.name }));
+            }}
+          >
+            {workout.name}
+          </h1>
 
           <div onClick={toggleTimer} className="cursor-pointer">
             <Timer isRunning={isRunning} seconds={seconds} />
           </div>
         </div>
-        <h2 className="">{focus}</h2>
+        <h2
+          className="focus:outline-none"
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={(e) => {
+            const text = e.currentTarget.textContent;
+            setFocus(text ?? focus);
+          }}
+        >
+          {focus}
+        </h2>
 
         {workout.exercises.map((exercise) => (
           <WorkoutTable
