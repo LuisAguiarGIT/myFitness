@@ -7,6 +7,7 @@ import ActivityCard from '@/components/ActivityCard';
 import TemplateModal from '@/components/TemplateModal';
 import WeeklyVolumeChart from '@/components/WeeklyVolumeChart';
 import Link from 'next/link';
+import { BicepsFlexed } from 'lucide-react';
 
 interface IWorkoutProps {
   id: string;
@@ -44,13 +45,13 @@ export default function Dashboard() {
       {showModal && <NewWorkoutModal setShowModal={setShowModal} />}
 
       <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="col-span-2 bg-[#1a1a1a] rounded-xl p-6 h-64 flex flex-col justify-between">
+        <div className="col-span-2 bg-[#1a1a1a] rounded-xl p-6 h-64 flex flex-col">
           <h1 className="text-[#f3ffca] text-2xl font-semibold">
             Hello, {user?.name}!
           </h1>
           <button
             onClick={() => setShowModal(true)}
-            className="mt-auto w-1/3 rounded-md h-16 bg-linear-to-r from-[#EFFFB6] to-[#CEFD16] text-black font-semibold"
+            className="mt-auto w-1/3 rounded-md h-16 bg-linear-to-r from-[#EFFFB6] to-[#CEFD16] text-black font-bold hover:cursor-pointer"
           >
             START NEW WORKOUT ▷
           </button>

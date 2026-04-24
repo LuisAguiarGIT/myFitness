@@ -49,7 +49,7 @@ export default function WorkoutVolumeTable() {
         bottom: 5,
       }}
     >
-      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-3)" />
+      <CartesianGrid strokeDasharray="3 3" stroke="#6a7282 " />
       <XAxis dataKey="day" stroke="#FFFFFF" />
       <YAxis width={60} stroke="#FFFFFF" />
       <Tooltip
