@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import NewWorkoutModal from '@/components/NewWorkoutModal';
 import ActivityCard from '@/components/ActivityCard';
 import TemplateModal from '@/components/TemplateModal';
+import WeeklyVolumeChart from '@/components/WeeklyVolumeChart';
 import Link from 'next/link';
 
 interface IWorkoutProps {
@@ -18,7 +19,6 @@ interface IWorkoutProps {
 export default function Dashboard() {
   const { data: session } = useSession();
   const user = session?.user;
-  const [quote, setQuote] = useState('');
   const [workouts, setWorkouts] = useState<IWorkoutProps[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [templateWorkoutId, setTemplateWorkoutId] = useState<string | null>(
@@ -26,12 +26,6 @@ export default function Dashboard() {
   );
 
   useEffect(() => {
-    fetch('/api/quote')
-      .then((res) => res.json())
-      .then((data) => {
-        setQuote('\"' + data[0].q + '\"' + ' - ' + data[0].a);
-      });
-
     fetch('/api/getRecentWorkouts')
       .then((res) => res.json())
       .then((data) => setWorkouts(data));
@@ -54,7 +48,6 @@ export default function Dashboard() {
           <h1 className="text-[#f3ffca] text-2xl font-semibold">
             Hello, {user?.name}!
           </h1>
-          <h2 className="italic">{quote}</h2>
           <button
             onClick={() => setShowModal(true)}
             className="mt-auto w-1/3 rounded-md h-16 bg-linear-to-r from-[#EFFFB6] to-[#CEFD16] text-black font-semibold"
@@ -67,10 +60,7 @@ export default function Dashboard() {
 
       {/* Middle row: PR card + Recent Activity */}
       <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="bg-[#e8622a] rounded-xl p-6">
-          {/* Personal Record */}
-        </div>
-        <div className="col-span-2 bg-[#1a1a1a] rounded-xl p-6">
+        <div className="col-span-3 bg-[#1a1a1a] rounded-xl p-6">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-semibold">Recent activity</h1>
             <Link
@@ -95,13 +85,8 @@ export default function Dashboard() {
       </div>
 
       {/* Bottom row: Muscle Fatigue + Weekly Training Load */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-[#1a1a1a] rounded-xl p-6 h-48">
-          {/* Muscle Fatigue */}
-        </div>
-        <div className="col-span-2 bg-[#1a1a1a] rounded-xl p-6 h-48">
-          {/* Weekly Training Load */}
-        </div>
+      <div className="bg-[#1a1a1a] rounded-xl p-6 flex align-center">
+        <WeeklyVolumeChart />
       </div>
     </div>
   );

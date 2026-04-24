@@ -99,7 +99,7 @@ export default function TemplateModal({
           <button
             onClick={handleStart}
             disabled={!workout}
-            className="flex-1 rounded-lg h-12 bg-gradient-to-r from-[#EFFFB6] to-[#CEFD16] text-black font-semibold disabled:opacity-40"
+            className="flex-1 rounded-lg h-12 bg-linear-to-r from-[#EFFFB6] to-[#CEFD16] text-black font-semibold disabled:opacity-40"
           >
             Start ▷
           </button>

@@ -1,7 +1,6 @@
 import prisma from '../src/lib/prisma';
 
 async function main() {
-  // 1. Upsert tags
   const tagNames = [
     'Push',
     'Pull',
@@ -21,7 +20,6 @@ async function main() {
     });
   }
 
-  // 2. Define exercises with their tags
   const exercises: { name: string; tags: string[] }[] = [
     { name: 'Lat Pulldown', tags: ['Pull', 'Back'] },
     { name: 'Seated Cable Row', tags: ['Pull', 'Back'] },
@@ -54,7 +52,6 @@ async function main() {
     { name: 'Reverse Fly', tags: ['Pull', 'Shoulder'] },
   ];
 
-  // 3. Upsert exercises and connect tags
   for (const exercise of exercises) {
     const tags = await prisma.tag.findMany({
       where: { name: { in: exercise.tags } },

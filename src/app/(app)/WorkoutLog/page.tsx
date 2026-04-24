@@ -94,7 +94,7 @@ export default function WorkoutLog() {
       <div className="w-1/2 bg-[#0E0E0E] text-white">
         <div className="flex justify-between mt-2">
           <h1
-            className="font-semibold text-4xl focus:outline-none"
+            className="font-semibold text-4xl focus:outline-none bg-[#2A2A2A] p-2 rounded-md"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => {
@@ -110,7 +110,7 @@ export default function WorkoutLog() {
           </div>
         </div>
         <h2
-          className="focus:outline-none"
+          className="focus:outline-none bg-[#2A2A2A] p-2 rounded-md mt-2"
           contentEditable
           suppressContentEditableWarning
           onBlur={(e) => {
