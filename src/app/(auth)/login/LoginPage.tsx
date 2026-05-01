@@ -9,10 +9,15 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  async function handleSubmit(e: React.SubmitEvent) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+    const password = (form.elements.namedItem('password') as HTMLInputElement)
+      .value;
 
     const { error } = await signIn.email({
       email,
@@ -45,6 +50,7 @@ export default function LoginPage() {
             <label className="text-[#aaa] text-sm">Email</label>
             <input
               type="email"
+              name="email"
               placeholder="email@example.com"
               className="bg-[#1f1f1f] text-white rounded-md p-3 w-full mt-1 outline-none focus:ring-2 focus:ring-[#CEFE00]"
               onChange={(e) => setEmail(e.target.value)}
@@ -57,6 +63,7 @@ export default function LoginPage() {
             <label className="text-[#aaa] text-sm">Password</label>
             <input
               type="password"
+              name="password"
               placeholder="••••••••"
               className="bg-[#1f1f1f] text-white rounded-md p-3 w-full mt-1 outline-none focus:ring-2 focus:ring-[#CEFE00]"
               onChange={(e) => setPassword(e.target.value)}

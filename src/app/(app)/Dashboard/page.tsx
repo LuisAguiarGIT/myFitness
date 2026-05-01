@@ -7,7 +7,6 @@ import ActivityCard from '@/components/ActivityCard';
 import TemplateModal from '@/components/TemplateModal';
 import WeeklyVolumeChart from '@/components/WeeklyVolumeChart';
 import Link from 'next/link';
-import { BicepsFlexed } from 'lucide-react';
 
 interface IWorkoutProps {
   id: string;
@@ -33,7 +32,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] p-6 text-white">
+    <div className="min-h-screen bg-background p-6 text-white">
       {templateWorkoutId && (
         <TemplateModal
           workoutId={templateWorkoutId}
@@ -44,9 +43,9 @@ export default function Dashboard() {
       {/* Modal */}
       {showModal && <NewWorkoutModal setShowModal={setShowModal} />}
 
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="col-span-2 bg-[#1a1a1a] rounded-xl p-6 h-64 flex flex-col">
-          <h1 className="text-[#f3ffca] text-2xl font-semibold">
+      <div className="grid grid-cols-3 space-y-8 gap-4">
+        <div className="col-span-2 bg-foreground rounded-xl p-6 h-64 flex flex-col">
+          <h1 className="text-primary text-2xl font-semibold">
             Hello, {user?.name}!
           </h1>
           <button
@@ -56,17 +55,17 @@ export default function Dashboard() {
             START NEW WORKOUT ▷
           </button>
         </div>
-        <div className="bg-[#1a1a1a] rounded-xl p-6 h-64"></div>
+        <div className="bg-foreground rounded-xl p-6 h-64"></div>
       </div>
 
       {/* Middle row: PR card + Recent Activity */}
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="col-span-3 bg-[#1a1a1a] rounded-xl p-6">
+      <div className="mb-4">
+        <div className="col-span-3 bg-foreground rounded-xl p-6">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-semibold">Recent activity</h1>
             <Link
               href="/History"
-              className="text-[#f3ffca] hover:underline hover:cursor-pointer"
+              className="text-primary hover:underline hover:cursor-pointer"
             >
               View History
             </Link>
@@ -86,7 +85,7 @@ export default function Dashboard() {
       </div>
 
       {/* Bottom row: Muscle Fatigue + Weekly Training Load */}
-      <div className="bg-[#1a1a1a] rounded-xl p-6 flex align-center">
+      <div className="bg-foreground rounded-xl p-6 flex align-center">
         <WeeklyVolumeChart />
       </div>
     </div>

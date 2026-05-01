@@ -37,7 +37,7 @@ export default function NewWorkoutModal({ setShowModal }: IWorkoutModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-      <div className="bg-[#1a1a1a] rounded-xl p-8 w-96 flex flex-col gap-4">
+      <div className="bg-foreground rounded-xl p-8 w-96 flex flex-col gap-4">
         <h2 className="text-xl font-semibold">New Workout</h2>
         <input
           type="text"
