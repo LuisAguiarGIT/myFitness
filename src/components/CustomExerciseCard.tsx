@@ -63,16 +63,20 @@ export default function CustomExerciseCard({ onAdd }: Props) {
         onChange={(e) => setName(e.target.value)}
       />
 
-      <div>
-        <p className="text-sm text-gray-400 mb-2">Muscle Groups</p>
-        <div className="flex flex-wrap gap-2">
+      <div className="p-2">
+        <div className="text-center">
+          <h1 className="text-md text-gray-400 m-2 animate-pulse">
+            Muscle Groups
+          </h1>
+        </div>
+        <div className="flex flex-wrap justify-center gap-2 m-2">
           {exerciseTags.map((tag) => {
             const isSelected = selectedTags.includes(tag.name);
             return (
               <button
                 key={tag.name}
                 onClick={() => toggleTag(tag.name)}
-                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                className={`px-3 py-1 rounded-full text-sm font-medium gap-2 border border-transparent transition-colors hover:border hover:border-[#CEFD16] ${
                   isSelected
                     ? 'bg-[#CEFD16] text-black'
                     : 'bg-[#2a2a2a] text-gray-400'

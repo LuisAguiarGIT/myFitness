@@ -26,6 +26,14 @@ export default function WorkoutLog() {
   const template = params.get('template');
   const router = useRouter();
   const [exercises, setExercises] = useState<IExercise[]>([]);
+  const [exercisePage, setExercisePage] = useState(0);
+  const pageSize = 5;
+
+  const paginatedExercises = exercises.slice(
+    exercisePage * pageSize,
+    exercisePage * pageSize + pageSize,
+  );
+  const totalPages = Math.ceil(exercises.length / pageSize);
 
   const { workout, setWorkout, addCustomExercise, handleSetsChange } =
     useWorkout({
@@ -137,7 +145,7 @@ export default function WorkoutLog() {
 
         <SubmitButton submit={submitCurrentWorkout} />
 
-        {exercises.map((exercise, i) => (
+        {paginatedExercises.map((exercise, i) => (
           <ExerciseCard
             key={i}
             {...exercise}
@@ -146,16 +154,36 @@ export default function WorkoutLog() {
                 ...prev,
                 exercises: [
                   ...prev.exercises,
-                  {
-                    id: Date.now(),
-                    name: exercise.name,
-                    sets: [],
-                  },
+                  { id: Date.now(), name: exercise.name, sets: [] },
                 ],
               }))
             }
           />
         ))}
+
+        {totalPages > 1 && (
+          <div className="flex justify-between items-center mt-2 px-1">
+            <button
+              onClick={() => setExercisePage((p) => Math.max(0, p - 1))}
+              disabled={exercisePage === 0}
+              className="px-3 py-1 rounded-md bg-[#2a2a2a] text-white disabled:opacity-30 hover:bg-[#3a3a3a] transition"
+            >
+              ←
+            </button>
+            <span className="text-gray-400 text-sm">
+              {exercisePage + 1} / {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setExercisePage((p) => Math.min(totalPages - 1, p + 1))
+              }
+              disabled={exercisePage === totalPages - 1}
+              className="px-3 py-1 rounded-md bg-[#2a2a2a] text-white disabled:opacity-30 hover:bg-[#3a3a3a] transition"
+            >
+              →
+            </button>
+          </div>
+        )}
 
         <CustomExerciseCard onAdd={addCustomExercise} />
       </div>
