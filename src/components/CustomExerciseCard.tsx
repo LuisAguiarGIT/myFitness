@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { validateExercise } from '@/lib/validators/exercise';
+import { IValidationResult, ValidationStatus } from '@/types/validation';
+import Alert from '@/components/Alert';
 
 interface IExerciseTags {
   name: string;
@@ -14,6 +17,8 @@ export default function CustomExerciseCard({ onAdd }: Props) {
   const [name, setName] = useState('');
   const [exerciseTags, setExerciseTags] = useState<IExerciseTags[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [validationResult, setValidationResult] =
+    useState<IValidationResult | null>(null);
 
   useEffect(() => {
     fetch('/api/getAllTags')
@@ -39,8 +44,13 @@ export default function CustomExerciseCard({ onAdd }: Props) {
       body: JSON.stringify(payload),
     });
 
-    if (res.ok) {
-      alert('OK response!');
+    if (!res.ok) {
+      const data = await res.json();
+
+      setValidationResult({
+        status: ValidationStatus.Error,
+        message: data.error ?? 'Failed to save exercise, please try again',
+      });
     }
   }
 
@@ -78,15 +88,25 @@ export default function CustomExerciseCard({ onAdd }: Props) {
       <button
         className="mt-2 w-full border border-dashed py-2 rounded-md font-semibold hover:cursor-pointer hover:bg-[#0E0E0E] transition"
         onClick={() => {
-          if (!name.trim()) return;
-          onAdd(name);
-          if (exerciseTags.length > 0) submitCustomExercise();
-          setName('');
-          setSelectedTags([]);
+          const result = validateExercise(name, selectedTags);
+          setValidationResult(result);
+
+          if (result.status === ValidationStatus.Success) {
+            onAdd(name);
+            submitCustomExercise();
+            setName('');
+            setSelectedTags([]);
+          }
         }}
       >
         Add Custom Exercise
       </button>
+      {validationResult && (
+        <Alert
+          status={validationResult.status}
+          message={validationResult.message}
+        />
+      )}
     </div>
   );
 }

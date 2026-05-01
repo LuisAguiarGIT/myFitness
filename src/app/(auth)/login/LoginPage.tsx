@@ -34,7 +34,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4">
-      <div className="bg-[#131313] w-full max-w-md rounded-2xl p-6 shadow-lg border border-[#222]">
+      <div className="bg-card w-full max-w-md rounded-2xl p-6 shadow-lg border border-[#222]">
         <h1 className="text-white text-2xl font-semibold text-center mb-6">
           Welcome back
         </h1>
