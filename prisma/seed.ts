@@ -1,6 +1,17 @@
 import prisma from '../src/lib/prisma';
+import { auth } from '../src/lib/auth';
 
 async function main() {
+  await auth.api.signUpEmail({
+    body: {
+      email: 'test@example.com',
+      password: 'password123',
+      name: 'Test User',
+    },
+  });
+
+  console.log('User created');
+
   const tagNames = [
     'Push',
     'Pull',
