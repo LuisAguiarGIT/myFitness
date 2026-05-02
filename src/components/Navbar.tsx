@@ -10,6 +10,7 @@ export default function Navbar() {
             width={50}
             height={50}
             src="/default.png"
+            loading="eager"
             alt="Image not found"
             className="border-2 border-[#cafd00] rounded-lg"
           />

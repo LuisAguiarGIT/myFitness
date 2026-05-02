@@ -17,6 +17,7 @@
     "better-auth": "^1.6.5",
     "dotenv": "^17.4.2",
     "lucide-react": "^1.7.0",
+    "motion": "^12.38.0",
     "next": "^16.2.4",
     "pg": "^8.20.0",
     "postcss": "^8.5.8",
