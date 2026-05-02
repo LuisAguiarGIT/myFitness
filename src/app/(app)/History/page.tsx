@@ -32,7 +32,7 @@ export default function History() {
           onClose={() => setTemplateWorkoutId(null)}
         />
       )}
-      <div className="w-2/3 bg-[#1a1a1a] rounded-xl p-6">
+      <div className="w-full md:w-2/3 bg-foreground rounded-xl p-6">
         <h1 className="text-2xl font-semibold mb-4">History</h1>
         {workouts.map((workout, i) => (
           <ActivityCard

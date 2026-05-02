@@ -49,8 +49,8 @@ export default function WorkoutTable({
     const newSet: WorkoutSet = {
       set: getSetNumber,
       previous: getPreviousVolume(),
-      weight: '',
-      reps: '',
+      weight: 0,
+      reps: 0,
       done: false,
     };
 
@@ -59,7 +59,7 @@ export default function WorkoutTable({
   }
 
   return (
-    <div className="bg-[#131313] p-4 mt-4 rounded-xl">
+    <div className="bg-card p-4 mt-4 rounded-xl">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-[#F3FFCA]">
           {exercise.name.toUpperCase()}
@@ -104,8 +104,11 @@ export default function WorkoutTable({
             <div className="flex justify-center">
               <input
                 className="w-16 bg-[#2A2A2A] text-center rounded-md py-2 outline-none text-gray-200"
+                type="number"
                 value={row.weight}
-                onChange={(e) => updateSet(index, 'weight', e.target.value)}
+                onChange={(e) =>
+                  updateSet(index, 'weight', parseInt(e.target.value) || 0)
+                }
               />
             </div>
 
@@ -113,8 +116,11 @@ export default function WorkoutTable({
             <div className="flex justify-center">
               <input
                 className="w-16 bg-[#2A2A2A] text-center rounded-md py-2 outline-none text-gray-200"
+                type="number"
                 value={row.reps}
-                onChange={(e) => updateSet(index, 'reps', e.target.value)}
+                onChange={(e) =>
+                  updateSet(index, 'reps', parseInt(e.target.value) || 0)
+                }
               />
             </div>
 

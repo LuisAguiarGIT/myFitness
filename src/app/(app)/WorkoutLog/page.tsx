@@ -99,8 +99,8 @@ export default function WorkoutLog() {
 
   return (
     <div className="flex justify-center h-screen">
-      <div className="w-1/2 bg-[#0E0E0E] text-white">
-        <div className="flex justify-between mt-2">
+      <div className="w-full md:w-1/2 bg-[#0E0E0E] text-white">
+        <div className="md:flex md:justify-between mt-2">
           <h1
             className="font-semibold text-4xl focus:outline-none bg-[#2A2A2A] p-2 rounded-md"
             contentEditable
@@ -113,7 +113,10 @@ export default function WorkoutLog() {
             {workout.name}
           </h1>
 
-          <div onClick={toggleTimer} className="cursor-pointer">
+          <div
+            onClick={toggleTimer}
+            className={`${isRunning ? '' : 'animate-pulse'} cursor-pointer mt-2`}
+          >
             <Timer isRunning={isRunning} seconds={seconds} />
           </div>
         </div>

@@ -43,14 +43,14 @@ export default function Dashboard() {
       {/* Modal */}
       {showModal && <NewWorkoutModal setShowModal={setShowModal} />}
 
-      <div className="grid grid-cols-3 space-y-8 gap-4">
-        <div className="col-span-2 bg-foreground rounded-xl p-6 h-64 flex flex-col">
-          <h1 className="text-primary text-2xl font-semibold">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="md:col-span-2 bg-foreground rounded-xl p-6 h-64 flex flex-col">
+          <h1 className="text-primary text-2xl font-semibold text-center md:text-left">
             Hello, {user?.name}!
           </h1>
           <button
             onClick={() => setShowModal(true)}
-            className="mt-auto w-1/3 rounded-md h-16 bg-linear-to-r from-[#EFFFB6] to-[#CEFD16] text-black font-bold hover:cursor-pointer"
+            className="mt-auto w-full md:w-1/3 rounded-md h-16 bg-linear-to-r from-[#EFFFB6] to-[#CEFD16] text-black font-bold cursor-pointer"
           >
             START NEW WORKOUT ▷
           </button>
