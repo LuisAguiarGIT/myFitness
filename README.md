@@ -1,16 +1,20 @@
 # myFitness
 
-A personal fitness tracking app built with Next.js, Prisma, and Better Auth.
+A personal fitness tracking app built with Docker, Next.js, Prisma, and Better Auth.
 
 ## Getting Started
 
 ### Prerequisites
 
+- Docker (main path)
+
+> [!NOTE]
+> For manual installation, you'll also need:
+
 - Node.js 18+
 - A PostgreSQL database
-- Docker (optional)
 
-### Docker Setup
+### 🐳 Docker Setup
 
 1. **Set up environment variables**
 
@@ -18,11 +22,17 @@ A personal fitness tracking app built with Next.js, Prisma, and Better Auth.
 cp .env.example .env
 ```
 
+> [!IMPORTANT]
+> Open `.env` and fill in `POSTGRES_PASSWORD` and `BETTER_AUTH_SECRET`.
+
 2. **Start the app**
 
 ```bash
 docker compose up
 ```
+
+> [!NOTE]
+> On first run, dependencies are installed and the database is migrated & seeded, it might take a minute.
 
 ### Manual Setup
 
