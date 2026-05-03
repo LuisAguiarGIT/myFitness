@@ -32,7 +32,7 @@ docker compose up
 ```
 
 > [!NOTE]
-> On first run, dependencies are installed and the database is migrated & seeded, it might take a minute. The base parametrized user can be found in /prisma/seed.ts. Sign up will be implemented in due time.
+> On first run, dependencies are installed and the database is migrated & seeded, it might take a minute. The base parametrized user can be found in `/prisma/seed.ts`. Sign up will be implemented in due time.
 
 ### Manual Setup
 
