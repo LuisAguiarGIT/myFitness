@@ -8,8 +8,23 @@ A personal fitness tracking app built with Next.js, Prisma, and Better Auth.
 
 - Node.js 18+
 - A PostgreSQL database
+- Docker (optional)
 
-### Setup
+### Docker Setup
+
+1. **Set up environment variables**
+
+```bash
+cp .env.example .env
+```
+
+2. **Start the app**
+
+```bash
+docker compose up
+```
+
+### Manual Setup
 
 1. **Install dependencies**
 
