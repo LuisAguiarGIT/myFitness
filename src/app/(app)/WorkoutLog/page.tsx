@@ -8,8 +8,8 @@ import WorkoutTable from '@/components/WorkoutTable';
 import { useWorkoutTimer } from '../../hooks/useWorkoutTimer';
 import { useWorkout } from '../../hooks/useWorkout';
 import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { getWorkoutParams } from '@/lib/workoutParams';
 
 interface IExercise {
   name: string;
@@ -20,11 +20,8 @@ interface IExercise {
 
 export default function WorkoutLog() {
   const params = useSearchParams();
-  const name = params.get('name') ?? 'My Workout';
+  const { name, tags, template } = getWorkoutParams(params);
   const [focus, setFocus] = useState(params.get('focus') ?? 'Hypertrophy');
-  const tags = params.get('tags') ?? '';
-  const template = params.get('template');
-  const router = useRouter();
   const [exercises, setExercises] = useState<IExercise[]>([]);
   const [exercisePage, setExercisePage] = useState(0);
   const pageSize = 5;
@@ -92,9 +89,7 @@ export default function WorkoutLog() {
       body: JSON.stringify(payload),
     });
 
-    if (res.ok) {
-      router.push('/Dashboard');
-    }
+    return res.ok;
   }
 
   return (
