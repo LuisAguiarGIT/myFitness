@@ -1,11 +1,15 @@
 import prisma from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import logger from '@/lib/logger';
 
 export async function GET() {
+  const log = logger.child({ module: 'api/volume' });
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session)
+  if (!session) {
+    log.warn('Unauthorized GET attempt');
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   const today = new Date();
   const monday = new Date(today);
@@ -14,17 +18,22 @@ export async function GET() {
   );
   monday.setHours(0, 0, 0, 0);
 
-  const workouts = await prisma.workout.findMany({
-    where: {
-      userId: session.user.id,
-      createdAt: { gte: monday },
-    },
-    include: {
-      exercises: {
-        include: { sets: true },
+  try {
+    const workouts = await prisma.workout.findMany({
+      where: {
+        userId: session.user.id,
+        createdAt: { gte: monday },
       },
-    },
-  });
+      include: {
+        exercises: {
+          include: { sets: true },
+        },
+      },
+    });
 
-  return Response.json(workouts);
+    return Response.json(workouts);
+  } catch (e) {
+    log.error({ err: e }, 'Failed to get volume');
+    return Response.json({ error: 'Something went wrong' }, { status: 500 });
+  }
 }
