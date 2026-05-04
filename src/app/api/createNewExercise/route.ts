@@ -45,6 +45,6 @@ export async function POST(req: Request) {
       { err: e },
       'Unhandled exception, failed to create a new exercise',
     );
-    return Response.json({ error: 'Something went wrong.' });
+    return Response.json({ error: 'Something went wrong.' }, { status: 500 });
   }
 }

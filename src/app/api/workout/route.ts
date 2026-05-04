@@ -47,6 +47,6 @@ export async function POST(req: Request) {
     return Response.json(workout, { status: 201 });
   } catch (e) {
     log.error({ err: e }, 'Unhandled exception');
-    return Response.json({ error: 'Something went wrong.' });
+    return Response.json({ error: 'Something went wrong.' }, { status: 500 });
   }
 }
