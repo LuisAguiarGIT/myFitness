@@ -9,6 +9,7 @@ import WeeklyVolumeChart from '@/components/WeeklyVolumeChart';
 import { BicepsFlexed } from 'lucide-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
+import WeightTracker from '@/components/WeightTracker';
 
 interface IWorkoutProps {
   id: string;
@@ -44,7 +45,8 @@ export default function Dashboard() {
   useEffect(() => {
     fetch('/api/getRecentWorkouts')
       .then((res) => res.json())
-      .then((data) => setWorkouts(data));
+      .then((data) => setWorkouts(data))
+      .catch((_) => setWorkouts([]));
   }, []);
 
   return (
@@ -67,7 +69,7 @@ export default function Dashboard() {
       >
         <motion.div
           variants={item}
-          className="relative md:col-span-2 bg-foreground rounded-xl p-6 h-64 flex flex-col"
+          className="relative md:col-span-2 bg-foreground rounded-xl p-6 min-h-96 flex flex-col"
         >
           <h1 className="text-primary text-2xl font-semibold text-center md:text-left">
             Hello, {user?.name}!
@@ -82,8 +84,10 @@ export default function Dashboard() {
         </motion.div>
         <motion.div
           variants={item}
-          className="bg-foreground rounded-xl p-6 h-64"
-        ></motion.div>
+          className="bg-foreground rounded-xl p-6 min-h-96"
+        >
+          <WeightTracker />
+        </motion.div>
       </motion.div>
 
       {/* Middle row: PR card + Recent Activity */}
@@ -103,17 +107,18 @@ export default function Dashboard() {
               View History
             </Link>
           </div>
-          {workouts.map((workout, i) => (
-            <ActivityCard
-              key={i}
-              id={workout.id}
-              name={workout.name}
-              focus={workout.focus}
-              durationSeconds={workout.durationSeconds}
-              createdAt={workout.createdAt}
-              onUseAsTemplate={(id) => setTemplateWorkoutId(id)}
-            />
-          ))}
+          {workouts.length > 0 &&
+            workouts.map((workout, i) => (
+              <ActivityCard
+                key={i}
+                id={workout.id}
+                name={workout.name}
+                focus={workout.focus}
+                durationSeconds={workout.durationSeconds}
+                createdAt={workout.createdAt}
+                onUseAsTemplate={(id) => setTemplateWorkoutId(id)}
+              />
+            ))}
         </div>
       </motion.div>
 

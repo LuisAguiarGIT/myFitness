@@ -14,7 +14,7 @@ export default function ExerciseCard({
   onAdd,
 }: ExerciseCardProps) {
   return (
-    <div className="bg-[#131313] mt-4 p-8 flex justify-between items-center rounded-sm">
+    <div className="bg-card mt-4 p-8 flex justify-between items-center rounded-sm">
       <div>
         <h1 className="font-semibold">{name.toUpperCase()}</h1>
         <div>

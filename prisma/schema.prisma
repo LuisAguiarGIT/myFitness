@@ -18,6 +18,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   workouts      Workout[]
+  personalStats PersonalStats[]
 
   @@map("user")
 }
@@ -84,6 +85,18 @@ model Workout {
 
   @@index([userId])
   @@map("workout")
+}
+
+model PersonalStats {
+  id        String      @id @default(cuid())
+  weight    Float
+  createdAt DateTime    @default(now())
+
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("personal_stats")
 }
 
 model Exercise {

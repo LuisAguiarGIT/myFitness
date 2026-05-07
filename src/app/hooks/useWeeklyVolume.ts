@@ -17,7 +17,7 @@ export function useWeeklyVolume() {
 
   useEffect(() => {
     async function retrieve() {
-      const res = await fetch('/api/volume');
+      const res = await fetch('/api/getWeeklyVolume');
       const workouts = await res.json();
 
       const today = new Date();
