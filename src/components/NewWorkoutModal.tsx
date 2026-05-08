@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'motion/react';
 
 interface IWorkoutModalProps {
   setShowModal: (value: boolean) => void;
@@ -37,7 +38,15 @@ export default function NewWorkoutModal({ setShowModal }: IWorkoutModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-      <div className="bg-foreground rounded-xl p-8 w-96 flex flex-col gap-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.4,
+          scale: { type: 'spring', visualDuration: 0.2, bounce: 0.5 },
+        }}
+        className="bg-foreground rounded-xl p-8 w-96 flex flex-col gap-4"
+      >
         <h2 className="text-xl font-semibold">New Workout</h2>
         <input
           type="text"
@@ -77,12 +86,14 @@ export default function NewWorkoutModal({ setShowModal }: IWorkoutModalProps) {
         </div>
 
         <div className="flex gap-3 mt-2">
-          <button
-            onClick={() => setShowModal(false)}
-            className="flex-1 rounded-lg h-12 bg-[#2a2a2a] text-gray-400"
-          >
-            Cancel
-          </button>
+          <div className="flex-1 animate-rotate-border max-w-sm rounded-lg bg-conic/[from_var(--border-angle)] from-foreground via-cancel to-foreground from-80% via-90% to-100% p-px transition-all hover:scale-105">
+            <button
+              onClick={() => setShowModal(false)}
+              className="rounded-lg h-12 w-full bg-[#2a2a2a] text-gray-400 cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
           <button
             onClick={handleStartWorkout}
             className={`flex-1 rounded-lg h-12  text-black font-semibold ${
@@ -97,7 +108,7 @@ export default function NewWorkoutModal({ setShowModal }: IWorkoutModalProps) {
             Let&apos;s Go ▷
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

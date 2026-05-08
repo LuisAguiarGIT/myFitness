@@ -11,7 +11,7 @@ export default function NavIcon({ icon: Icon, route, path }: INavIconProps) {
   return (
     <Link href={route}>
       <Icon
-        className={`w-6 h-6 ${route === path ? 'stroke-[#f3ffca]' : 'stroke-gray-500'} mt-6`}
+        className={`w-6 h-6 ${route === path ? 'stroke-primary' : 'stroke-gray-500'} mt-6`}
       />
     </Link>
   );

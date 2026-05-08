@@ -1,25 +1,31 @@
 'use client';
 
-import { signIn } from '@/lib/auth-client';
+import { signUp } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
-interface ISignInCreds {
+interface IFormData {
+  name: string;
   email: string;
   password: string;
 }
 
-export default function LoginPage() {
+export default function SignupPage() {
+  const router = useRouter();
   const [serverError, setServerError] = useState('');
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ISignInCreds>();
-  const onSubmit: SubmitHandler<ISignInCreds> = async (data) => {
+  } = useForm<IFormData>();
+
+  const onSubmit: SubmitHandler<IFormData> = async (data) => {
     setServerError('');
 
-    const { error } = await signIn.email({
+    const { error } = await signUp.email({
+      name: data.name,
       email: data.email,
       password: data.password,
       callbackURL: '/Dashboard',
@@ -27,6 +33,8 @@ export default function LoginPage() {
 
     if (error) {
       setServerError(error.message ?? 'An unexpected error ocurred');
+    } else {
+      router.push('/Dashboard');
     }
   };
 
@@ -34,7 +42,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4">
       <div className="bg-card w-full max-w-md rounded-2xl p-6 shadow-lg border border-[#222]">
         <h1 className="text-white text-2xl font-semibold text-center mb-6">
-          Welcome back
+          Welcome!
         </h1>
 
         {serverError && (
@@ -43,13 +51,33 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          method="POST"
+          className="space-y-5"
+        >
+          <div>
+            <label className="text-[#aaa] text-sm">Name</label>
+            <input
+              type="text"
+              placeholder="Your name..."
+              className="bg-[#1f1f1f] text-white rounded-md p-3 w-full mt-1 outline-none focus:ring-2 focus:ring-[#CEFE00]"
+              {...register('name', {
+                required: {
+                  value: true,
+                  message: 'Name is required.',
+                },
+              })}
+            />
+            {errors.name && (
+              <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>
+            )}
+          </div>
           <div>
             <label className="text-[#aaa] text-sm">Email</label>
             <input
               type="email"
               placeholder="email@example.com"
-              autoComplete="email"
               className="bg-[#1f1f1f] text-white rounded-md p-3 w-full mt-1 outline-none focus:ring-2 focus:ring-[#CEFE00]"
               {...register('email', {
                 required: true,
@@ -71,7 +99,6 @@ export default function LoginPage() {
             <input
               type="password"
               placeholder="••••••••"
-              autoComplete="current-password"
               className="bg-[#1f1f1f] text-white rounded-md p-3 w-full mt-1 outline-none focus:ring-2 focus:ring-[#CEFE00]"
               {...register('password', {
                 required: true,
@@ -88,21 +115,12 @@ export default function LoginPage() {
             )}
           </div>
 
-          <div>
-            <a
-              href="/signup"
-              className="text-[#CEFE00] text-sm hover:underline cursor-pointer"
-            >
-              Don&apos;t have an account? Sign up here
-            </a>
-          </div>
-
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-[#CEFE00] w-full py-3 rounded-md font-bold text-[#556C00] text-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#CEFE00] w-full py-3 rounded-md uppercase font-bold text-[#556C00] text-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Logging in...' : 'LOGIN'}
+            {isSubmitting ? 'Registering your new account...' : 'Register'}
           </button>
         </form>
       </div>

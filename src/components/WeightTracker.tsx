@@ -1,18 +1,9 @@
 import { ArrowUp, ArrowDown } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { motion } from 'motion/react';
-import { usePersonalStatsStore } from '@/app/store/personalStatsStore';
-
-// interface ICurrentStats {
-//   weight: number;
-//   weightDiff: null | number;
-// }
+import { usePersonalStatsStore } from '@/app/stores/personalStatsStore';
 
 export default function WeightTracker() {
-  // const [currentStats, setCurrentStats] = useState<ICurrentStats>({
-  //   weight: 0,
-  //   weightDiff: null,
-  // });
   const {
     previousWeight,
     currentWeight,
@@ -31,6 +22,7 @@ export default function WeightTracker() {
         setPreviousWeight(data.mostRecentWeight?.weight ?? 0);
         setHasFetched(true);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasFetched]);
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -71,7 +63,6 @@ export default function WeightTracker() {
               name="weight"
               type="number"
               step="0.1"
-              // placeholder={(previousWeight ?? 0).toString()}
               placeholder={
                 currentWeight.weight
                   ? currentWeight.weight.toString()

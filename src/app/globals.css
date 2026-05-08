@@ -16,5 +16,21 @@ body {
   --color-success: #5daa60;
   --color-error: #de3d32;
 
+  --color-cancel: #ff0000;
+
   --color-primary: #f3ffca;
+
+  --animate-rotate-border: border-rotate 3s linear infinite;
+
+  @keyframes border-rotate {
+    to {
+      --border-angle: 360deg;
+    }
+  }
+}
+
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
 }

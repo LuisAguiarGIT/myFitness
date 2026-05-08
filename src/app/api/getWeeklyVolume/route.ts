@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import logger from '@/lib/logger';
 
 export async function GET() {
-  const log = logger.child({ module: 'api/volume' });
+  const log = logger.child({ module: 'api/getWeeklyVolume' });
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
     log.warn('Unauthorized GET attempt');

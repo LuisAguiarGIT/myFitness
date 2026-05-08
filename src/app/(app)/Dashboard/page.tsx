@@ -46,6 +46,7 @@ export default function Dashboard() {
     fetch('/api/getRecentWorkouts')
       .then((res) => res.json())
       .then((data) => setWorkouts(data))
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .catch((_) => setWorkouts([]));
   }, []);
 
