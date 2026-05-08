@@ -33,7 +33,7 @@ export default function Navbar() {
               loading="eager"
               alt="Image not found"
               onClick={() => setAvatarMenuVisible(!avatarMenuVisible)}
-              className="border-2 border-[#cafd00] rounded-lg"
+              className="border-2 border-[#cafd00] rounded-lg cursor-pointer"
             />
             <h1 className="italic text-2xl font-bold ml-4 text-[#cafd00]">
               MY FITNESS

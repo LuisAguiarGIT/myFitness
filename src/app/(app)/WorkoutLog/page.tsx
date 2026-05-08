@@ -10,21 +10,24 @@ import { useWorkout } from '../../hooks/useWorkout';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { getWorkoutParams } from '@/lib/workoutParams';
+import { useExercises } from '@/app/hooks/useExercises';
 
 interface IExercise {
   name: string;
   sets: number;
   reps: number;
   weight: number;
+  tags: [];
 }
 
 export default function WorkoutLog() {
   const params = useSearchParams();
   const { name, tags, template } = getWorkoutParams(params);
   const [focus, setFocus] = useState(params.get('focus') ?? 'Hypertrophy');
-  const [exercises, setExercises] = useState<IExercise[]>([]);
   const [exercisePage, setExercisePage] = useState(0);
   const pageSize = 5;
+
+  const exercises = useExercises(tags);
 
   const paginatedExercises = exercises.slice(
     exercisePage * pageSize,
@@ -55,18 +58,6 @@ export default function WorkoutLog() {
           })),
         })),
       }));
-    } else if (tags) {
-      fetch(`/api/getExercisesByTags?tags=${tags}`)
-        .then((res) => res.json())
-        .then((data) =>
-          setExercises(
-            data.map((exercise: IExercise) => ({
-              name: exercise.name,
-              sets: exercise.sets,
-              reps: exercise.reps,
-            })),
-          ),
-        );
     }
   }, [tags, template, setWorkout]);
 
