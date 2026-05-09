@@ -10,14 +10,7 @@ import { BicepsFlexed } from 'lucide-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import WeightTracker from '@/components/WeightTracker';
-
-interface IWorkoutProps {
-  id: string;
-  name: string;
-  focus: string;
-  durationSeconds: number;
-  createdAt: string;
-}
+import { WorkoutSummary } from '@/types/workout';
 
 const container = {
   hidden: {},
@@ -36,7 +29,7 @@ const item = {
 export default function Dashboard() {
   const { data: session } = useSession();
   const user = session?.user;
-  const [workouts, setWorkouts] = useState<IWorkoutProps[]>([]);
+  const [workouts, setWorkouts] = useState<WorkoutSummary[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [templateWorkoutId, setTemplateWorkoutId] = useState<string | null>(
     null,

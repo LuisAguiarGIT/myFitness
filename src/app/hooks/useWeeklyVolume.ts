@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { WorkoutResponse, WorkoutSet, WorkoutExercise } from '@/types/workout';
+import { WorkoutResponse } from '@/types/workout';
+import { calcDayVolume } from '@/lib/utils';
 
 const DAYS = [
   'Monday',
@@ -31,21 +32,7 @@ export function useWeeklyVolume() {
           w.createdAt.startsWith(dateStr),
         );
 
-        const volume = dayWorkouts.reduce(
-          (total: number, workout: WorkoutResponse) =>
-            total +
-            workout.exercises.reduce(
-              (exTotal: number, ex: WorkoutExercise) =>
-                exTotal +
-                ex.sets.reduce(
-                  (setTotal: number, set: WorkoutSet) =>
-                    setTotal + set.reps * set.weight,
-                  0,
-                ),
-              0,
-            ),
-          0,
-        );
+        const volume = calcDayVolume(dayWorkouts);
 
         return {
           day: DAYS[date.getDay() === 0 ? 6 : date.getDay() - 1],

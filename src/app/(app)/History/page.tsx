@@ -3,17 +3,10 @@
 import { useState, useEffect } from 'react';
 import ActivityCard from '@/components/ActivityCard';
 import TemplateModal from '@/components/TemplateModal';
-
-interface IWorkoutProps {
-  id: string;
-  name: string;
-  focus: string;
-  durationSeconds: number;
-  createdAt: string;
-}
+import { WorkoutSummary } from '@/types/workout';
 
 export default function History() {
-  const [workouts, setWorkouts] = useState<IWorkoutProps[]>([]);
+  const [workouts, setWorkouts] = useState<WorkoutSummary[]>([]);
   const [templateWorkoutId, setTemplateWorkoutId] = useState<string | null>(
     null,
   );

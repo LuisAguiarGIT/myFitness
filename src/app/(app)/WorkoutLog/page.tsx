@@ -12,25 +12,21 @@ import { useState, useEffect } from 'react';
 import { getWorkoutParams } from '@/lib/workoutParams';
 import { useExercises } from '@/app/hooks/useExercises';
 import { useTags } from '@/app/hooks/useTags';
-
-interface IExercise {
-  name: string;
-  sets: number;
-  reps: number;
-  weight: number;
-  tags: string[];
-}
+import TagPill from '@/components/TagPill';
+import { useTagSelection } from '@/app/hooks/useTagSelection';
+import { EXERCISE_PAGE_SIZE } from '@/lib/constants';
+import { IExercise } from '@/app/hooks/useExercises';
+import { useWorkoutSubmit } from '@/app/hooks/useWorkoutSubmit';
 
 export default function WorkoutLog() {
   const params = useSearchParams();
   const { name, tags, template } = getWorkoutParams(params);
   const [focus, setFocus] = useState(params.get('focus') ?? 'Hypertrophy');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [exercisePage, setExercisePage] = useState(0);
-  const pageSize = 5;
 
   const filterTags = useTags();
   const exercises = useExercises(tags);
+  const { selectedTags, toggleTag } = useTagSelection();
 
   const filteredExercises =
     selectedTags.length === 0
@@ -40,17 +36,10 @@ export default function WorkoutLog() {
         );
 
   const paginatedExercises = filteredExercises.slice(
-    exercisePage * pageSize,
-    exercisePage * pageSize + pageSize,
+    exercisePage * EXERCISE_PAGE_SIZE,
+    exercisePage * EXERCISE_PAGE_SIZE + EXERCISE_PAGE_SIZE,
   );
-  const totalPages = Math.ceil(filteredExercises.length / pageSize);
-
-  function toggleTag(tag: string) {
-    setExercisePage(0);
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
-    );
-  }
+  const totalPages = Math.ceil(filteredExercises.length / EXERCISE_PAGE_SIZE);
 
   const { workout, setWorkout, addCustomExercise, handleSetsChange } =
     useWorkout({
@@ -80,31 +69,7 @@ export default function WorkoutLog() {
 
   const { seconds, isRunning, toggleTimer } = useWorkoutTimer();
 
-  async function submitCurrentWorkout() {
-    const payload = {
-      name: workout.name,
-      focus: focus,
-      durationSeconds: seconds,
-      exercises: workout.exercises.map((exercise) => ({
-        name: exercise.name,
-        sets: exercise.sets,
-      })),
-    };
-
-    try {
-      const res = await fetch('/api/workout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        return res.json();
-      }
-    } catch (e) {
-      return Response.json({ e });
-    }
-  }
+  const { submitCurrentWorkout } = useWorkoutSubmit(workout, focus, seconds);
 
   return (
     <div className="flex justify-center h-screen">
@@ -156,27 +121,20 @@ export default function WorkoutLog() {
         ))}
 
         <SubmitButton submit={submitCurrentWorkout} />
+
         <div className="p-2 text-center font-semibold">
           <h1 className="text-2xl text-white">Filter by tag</h1>
         </div>
         {filterTags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2 px-1 items-center justify-center">
-            {filterTags.map((tag) => {
-              const active = selectedTags.includes(tag.name);
-              return (
-                <button
-                  key={tag.name}
-                  onClick={() => toggleTag(tag.name)}
-                  className={`px-3 py-1 rounded-full text-sm transition ${
-                    active
-                      ? 'bg-white text-black font-semibold'
-                      : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#3a3a3a]'
-                  }`}
-                >
-                  {tag.name}
-                </button>
-              );
-            })}
+            {filterTags.map((tag) => (
+              <TagPill
+                key={tag.name}
+                name={tag.name}
+                selected={selectedTags.includes(tag.name)}
+                onToggle={toggleTag}
+              />
+            ))}
           </div>
         )}
 

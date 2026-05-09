@@ -1,33 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
+import { useTags } from '@/app/hooks/useTags';
+import TagPill from '@/components/TagPill';
+import { useTagSelection } from '@/app/hooks/useTagSelection';
 
 interface IWorkoutModalProps {
   setShowModal: (value: boolean) => void;
 }
 
-interface ITagProps {
-  name: string;
-}
-
 export default function NewWorkoutModal({ setShowModal }: IWorkoutModalProps) {
   const [workoutName, setWorkoutName] = useState('');
   const [workoutFocus, setWorkoutFocus] = useState('');
-  const [exerciseTags, setExerciseTags] = useState<ITagProps[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  // const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    fetch('/api/getAllTags')
-      .then((res) => res.json())
-      .then((data) => setExerciseTags(data));
-  }, []);
+  const exerciseTags = useTags();
+  const { selectedTags, toggleTag } = useTagSelection();
 
-  function toggleTag(tag: string) {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
-    );
-  }
+  // function toggleTag(tag: string) {
+  //   setSelectedTags((prev) =>
+  //     prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+  //   );
+  // }
 
   function handleStartWorkout() {
     if (!workoutName || !workoutFocus || selectedTags.length === 0) return;
@@ -66,22 +61,14 @@ export default function NewWorkoutModal({ setShowModal }: IWorkoutModalProps) {
         <div>
           <p className="text-sm text-gray-400 mb-2">Muscle Groups</p>
           <div className="flex flex-wrap gap-2">
-            {exerciseTags.map((tag) => {
-              const isSelected = selectedTags.includes(tag.name);
-              return (
-                <button
-                  key={tag.name}
-                  onClick={() => toggleTag(tag.name)}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                    isSelected
-                      ? 'bg-[#CEFD16] text-black'
-                      : 'bg-[#2a2a2a] text-gray-400'
-                  }`}
-                >
-                  {tag.name}
-                </button>
-              );
-            })}
+            {exerciseTags.map((tag) => (
+              <TagPill
+                key={tag.name}
+                name={tag.name}
+                selected={selectedTags.includes(tag.name)}
+                onToggle={toggleTag}
+              />
+            ))}
           </div>
         </div>
 

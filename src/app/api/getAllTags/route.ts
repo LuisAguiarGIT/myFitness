@@ -1,27 +1,23 @@
-import { auth } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-import { headers } from 'next/headers';
 import logger from '@/lib/logger';
+import { withAuth } from '@/lib/withAuth';
+import { API_MODULES } from '@/lib/constants';
 
 export async function GET() {
-  const log = logger.child({ module: 'api/getAllTags' });
-  const session = await auth.api.getSession({ headers: await headers() });
+  const log = logger.child({ module: API_MODULES.getAllTags });
 
-  if (!session) {
-    log.warn('Unauthorized GET attempt');
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  return withAuth(log, async () => {
+    try {
+      const tags = await prisma.tag.findMany({
+        select: {
+          name: true,
+        },
+      });
 
-  try {
-    const tags = await prisma.tag.findMany({
-      select: {
-        name: true,
-      },
-    });
-
-    return Response.json(tags);
-  } catch (e) {
-    log.error({ err: e }, 'Failed to get tags');
-    return Response.json({ error: 'Something went wrong' }, { status: 500 });
-  }
+      return Response.json(tags);
+    } catch (e) {
+      log.error({ err: e }, 'Failed to get tags');
+      return Response.json({ error: 'Something went wrong' }, { status: 500 });
+    }
+  });
 }

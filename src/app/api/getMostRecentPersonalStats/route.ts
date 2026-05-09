@@ -1,33 +1,29 @@
-import { auth } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-import { headers } from 'next/headers';
 import logger from '@/lib/logger';
+import { withAuth } from '@/lib/withAuth';
+import { API_MODULES } from '@/lib/constants';
 
 export async function GET() {
-  const log = logger.child({ module: 'api/getMostRecentPersonalStats' });
-  const session = await auth.api.getSession({ headers: await headers() });
+  const log = logger.child({ module: API_MODULES.getMostRecentPersonalStats });
 
-  if (!session) {
-    log.warn('Unauthorized GET attempt');
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  return withAuth(log, async (session) => {
+    try {
+      const mostRecentWeight = await prisma.personalStats.findFirst({
+        select: {
+          weight: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        where: {
+          userId: session.user.id,
+        },
+      });
 
-  try {
-    const mostRecentWeight = await prisma.personalStats.findFirst({
-      select: {
-        weight: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      where: {
-        userId: session.user.id,
-      },
-    });
-
-    return Response.json({ mostRecentWeight }, { status: 201 });
-  } catch (e) {
-    log.error({ err: e }, 'Failed to get latest weight!');
-    return Response.json({ error: 'Something went wrong' }, { status: 500 });
-  }
+      return Response.json(mostRecentWeight);
+    } catch (e) {
+      log.error({ err: e }, 'Failed to get latest weight!');
+      return Response.json({ error: 'Something went wrong' }, { status: 500 });
+    }
+  });
 }

@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { validateExercise } from '@/lib/validators/exercise';
 import { IValidationResult, ValidationStatus } from '@/types/validation';
 import Alert from '@/components/Alert';
-
-interface IExerciseTags {
-  name: string;
-}
+import { useTags } from '@/app/hooks/useTags';
+import TagPill from './TagPill';
+import { useTagSelection } from '@/app/hooks/useTagSelection';
 
 type Props = {
   onAdd: (name: string) => void;
@@ -15,22 +14,11 @@ type Props = {
 
 export default function CustomExerciseCard({ onAdd }: Props) {
   const [name, setName] = useState('');
-  const [exerciseTags, setExerciseTags] = useState<IExerciseTags[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [validationResult, setValidationResult] =
     useState<IValidationResult | null>(null);
 
-  useEffect(() => {
-    fetch('/api/getAllTags')
-      .then((res) => res.json())
-      .then((data) => setExerciseTags(data));
-  }, []);
-
-  function toggleTag(tag: string) {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
-    );
-  }
+  const exerciseTags = useTags();
+  const { selectedTags, toggleTag, setSelectedTags } = useTagSelection();
 
   async function submitCustomExercise() {
     const payload = {
@@ -70,22 +58,14 @@ export default function CustomExerciseCard({ onAdd }: Props) {
           </h1>
         </div>
         <div className="flex flex-wrap justify-center gap-2 m-2">
-          {exerciseTags.map((tag) => {
-            const isSelected = selectedTags.includes(tag.name);
-            return (
-              <button
-                key={tag.name}
-                onClick={() => toggleTag(tag.name)}
-                className={`px-3 py-1 rounded-full text-sm font-medium gap-2 border border-transparent transition-colors hover:border hover:border-[#CEFD16] ${
-                  isSelected
-                    ? 'bg-[#CEFD16] text-black'
-                    : 'bg-[#2a2a2a] text-gray-400'
-                }`}
-              >
-                {tag.name}
-              </button>
-            );
-          })}
+          {exerciseTags.map((tag) => (
+            <TagPill
+              key={tag.name}
+              name={tag.name}
+              selected={selectedTags.includes(tag.name)}
+              onToggle={toggleTag}
+            />
+          ))}
         </div>
       </div>
 

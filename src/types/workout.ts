@@ -24,3 +24,11 @@ export type WorkoutResponse = {
   createdAt: string;
   exercises: WorkoutExercise[];
 };
+
+export type WorkoutSummary = {
+  id: string;
+  name: string;
+  focus: string;
+  durationSeconds: number;
+  createdAt: string;
+};
