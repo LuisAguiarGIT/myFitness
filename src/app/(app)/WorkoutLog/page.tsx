@@ -11,29 +11,46 @@ import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { getWorkoutParams } from '@/lib/workoutParams';
 import { useExercises } from '@/app/hooks/useExercises';
+import { useTags } from '@/app/hooks/useTags';
 
 interface IExercise {
   name: string;
   sets: number;
   reps: number;
   weight: number;
-  tags: [];
+  tags: string[];
 }
 
 export default function WorkoutLog() {
   const params = useSearchParams();
   const { name, tags, template } = getWorkoutParams(params);
   const [focus, setFocus] = useState(params.get('focus') ?? 'Hypertrophy');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [exercisePage, setExercisePage] = useState(0);
   const pageSize = 5;
 
+  const filterTags = useTags();
   const exercises = useExercises(tags);
 
-  const paginatedExercises = exercises.slice(
+  const filteredExercises =
+    selectedTags.length === 0
+      ? exercises
+      : exercises.filter((exercise) =>
+          selectedTags.some((tag) => exercise.tags.includes(tag)),
+        );
+
+  const paginatedExercises = filteredExercises.slice(
     exercisePage * pageSize,
     exercisePage * pageSize + pageSize,
   );
-  const totalPages = Math.ceil(exercises.length / pageSize);
+  const totalPages = Math.ceil(filteredExercises.length / pageSize);
+
+  function toggleTag(tag: string) {
+    setExercisePage(0);
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+  }
 
   const { workout, setWorkout, addCustomExercise, handleSetsChange } =
     useWorkout({
@@ -74,13 +91,19 @@ export default function WorkoutLog() {
       })),
     };
 
-    const res = await fetch('/api/workout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch('/api/workout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-    return res.ok;
+      if (res.ok) {
+        return res.json();
+      }
+    } catch (e) {
+      return Response.json({ e });
+    }
   }
 
   return (
@@ -133,6 +156,29 @@ export default function WorkoutLog() {
         ))}
 
         <SubmitButton submit={submitCurrentWorkout} />
+        <div className="p-2 text-center font-semibold">
+          <h1 className="text-2xl text-white">Filter by tag</h1>
+        </div>
+        {filterTags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2 px-1 items-center justify-center">
+            {filterTags.map((tag) => {
+              const active = selectedTags.includes(tag.name);
+              return (
+                <button
+                  key={tag.name}
+                  onClick={() => toggleTag(tag.name)}
+                  className={`px-3 py-1 rounded-full text-sm transition ${
+                    active
+                      ? 'bg-white text-black font-semibold'
+                      : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#3a3a3a]'
+                  }`}
+                >
+                  {tag.name}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {paginatedExercises.map((exercise, i) => (
           <ExerciseCard

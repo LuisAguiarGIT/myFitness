@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react';
 
+interface IExerciseRaw {
+  name: string;
+  sets: number;
+  reps: number;
+  weight: number;
+  tags: string[];
+}
+
 interface IExercise {
   name: string;
   sets: number;
   reps: number;
   weight: number;
-  tags: [];
+  tags: string[]; // flattened shape
 }
 
 export function useExercises(tags?: string) {
@@ -20,10 +28,11 @@ export function useExercises(tags?: string) {
       .then((res) => res.json())
       .then((data) =>
         setExercises(
-          data.map((exercise: IExercise) => ({
+          data.map((exercise: IExerciseRaw) => ({
             name: exercise.name,
             sets: exercise.sets,
             reps: exercise.reps,
+            weight: exercise.weight,
             tags: exercise.tags ?? [],
           })),
         ),
