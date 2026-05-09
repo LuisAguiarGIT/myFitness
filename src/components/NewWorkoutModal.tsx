@@ -12,17 +12,10 @@ interface IWorkoutModalProps {
 export default function NewWorkoutModal({ setShowModal }: IWorkoutModalProps) {
   const [workoutName, setWorkoutName] = useState('');
   const [workoutFocus, setWorkoutFocus] = useState('');
-  // const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const router = useRouter();
 
   const exerciseTags = useTags();
   const { selectedTags, toggleTag } = useTagSelection();
-
-  // function toggleTag(tag: string) {
-  //   setSelectedTags((prev) =>
-  //     prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
-  //   );
-  // }
 
   function handleStartWorkout() {
     if (!workoutName || !workoutFocus || selectedTags.length === 0) return;

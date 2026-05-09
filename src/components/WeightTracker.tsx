@@ -2,6 +2,7 @@ import { ArrowUp, ArrowDown } from 'lucide-react';
 import { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { usePersonalStatsStore } from '@/app/stores/personalStatsStore';
+import { API_MODULES } from '@/lib/constants';
 
 export default function WeightTracker() {
   const {
@@ -16,10 +17,10 @@ export default function WeightTracker() {
   useEffect(() => {
     if (hasFetched) return;
 
-    fetch('api/getMostRecentPersonalStats')
+    fetch(API_MODULES.getMostRecentPersonalStats)
       .then((res) => res.json())
       .then((data) => {
-        setPreviousWeight(data.mostRecentWeight?.weight ?? 0);
+        setPreviousWeight(data?.weight ?? 0);
         setHasFetched(true);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,7 +33,7 @@ export default function WeightTracker() {
       weight: currentWeight,
     };
 
-    const res = await fetch('/api/createPersonalStats', {
+    const res = await fetch(API_MODULES.createPersonalStats, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

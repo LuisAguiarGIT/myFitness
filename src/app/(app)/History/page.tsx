@@ -15,7 +15,7 @@ export default function History() {
     fetch('/api/getRecentWorkouts?limit=7')
       .then((res) => res.json())
       .then((data) => setWorkouts(data));
-  }, [setWorkouts]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] p-6 text-white flex justify-center">

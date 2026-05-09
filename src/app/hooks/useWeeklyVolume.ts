@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { WorkoutResponse } from '@/types/workout';
 import { calcDayVolume } from '@/lib/utils';
+import { API_MODULES } from '@/lib/constants';
 
 const DAYS = [
   'Monday',
@@ -18,7 +19,7 @@ export function useWeeklyVolume() {
 
   useEffect(() => {
     async function retrieve() {
-      const res = await fetch('/api/getWeeklyVolume');
+      const res = await fetch(API_MODULES.getWeeklyVolume);
       const workouts = await res.json();
 
       const today = new Date();

@@ -11,6 +11,7 @@ import { motion } from 'motion/react';
 import Link from 'next/link';
 import WeightTracker from '@/components/WeightTracker';
 import { WorkoutSummary } from '@/types/workout';
+import { API_MODULES } from '@/lib/constants';
 
 const container = {
   hidden: {},
@@ -36,7 +37,7 @@ export default function Dashboard() {
   );
 
   useEffect(() => {
-    fetch('/api/getRecentWorkouts')
+    fetch(API_MODULES.getRecentWorkouts)
       .then((res) => res.json())
       .then((data) => setWorkouts(data))
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

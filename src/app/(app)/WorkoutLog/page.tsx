@@ -1,6 +1,5 @@
 'use client';
 
-import ExerciseCard from '@/components/ExerciseCard';
 import CustomExerciseCard from '@/components/CustomExerciseCard';
 import SubmitButton from '@/components/SubmitButton';
 import Timer from '@/components/Timer';
@@ -11,35 +10,16 @@ import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { getWorkoutParams } from '@/lib/workoutParams';
 import { useExercises } from '@/app/hooks/useExercises';
-import { useTags } from '@/app/hooks/useTags';
-import TagPill from '@/components/TagPill';
-import { useTagSelection } from '@/app/hooks/useTagSelection';
-import { EXERCISE_PAGE_SIZE } from '@/lib/constants';
 import { IExercise } from '@/app/hooks/useExercises';
 import { useWorkoutSubmit } from '@/app/hooks/useWorkoutSubmit';
+import ExerciseList from '@/components/ExerciseList';
 
 export default function WorkoutLog() {
   const params = useSearchParams();
   const { name, tags, template } = getWorkoutParams(params);
   const [focus, setFocus] = useState(params.get('focus') ?? 'Hypertrophy');
-  const [exercisePage, setExercisePage] = useState(0);
 
-  const filterTags = useTags();
   const exercises = useExercises(tags);
-  const { selectedTags, toggleTag } = useTagSelection();
-
-  const filteredExercises =
-    selectedTags.length === 0
-      ? exercises
-      : exercises.filter((exercise) =>
-          selectedTags.some((tag) => exercise.tags.includes(tag)),
-        );
-
-  const paginatedExercises = filteredExercises.slice(
-    exercisePage * EXERCISE_PAGE_SIZE,
-    exercisePage * EXERCISE_PAGE_SIZE + EXERCISE_PAGE_SIZE,
-  );
-  const totalPages = Math.ceil(filteredExercises.length / EXERCISE_PAGE_SIZE);
 
   const { workout, setWorkout, addCustomExercise, handleSetsChange } =
     useWorkout({
@@ -125,58 +105,18 @@ export default function WorkoutLog() {
         <div className="p-2 text-center font-semibold">
           <h1 className="text-2xl text-white">Filter by tag</h1>
         </div>
-        {filterTags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2 px-1 items-center justify-center">
-            {filterTags.map((tag) => (
-              <TagPill
-                key={tag.name}
-                name={tag.name}
-                selected={selectedTags.includes(tag.name)}
-                onToggle={toggleTag}
-              />
-            ))}
-          </div>
-        )}
-
-        {paginatedExercises.map((exercise, i) => (
-          <ExerciseCard
-            key={i}
-            {...exercise}
-            onAdd={() =>
-              setWorkout((prev) => ({
-                ...prev,
-                exercises: [
-                  ...prev.exercises,
-                  { id: Date.now(), name: exercise.name, sets: [] },
-                ],
-              }))
-            }
-          />
-        ))}
-
-        {totalPages > 1 && (
-          <div className="flex justify-between items-center mt-2 px-1">
-            <button
-              onClick={() => setExercisePage((p) => Math.max(0, p - 1))}
-              disabled={exercisePage === 0}
-              className="px-3 py-1 rounded-md bg-[#2a2a2a] text-white disabled:opacity-30 hover:bg-[#3a3a3a] transition"
-            >
-              ←
-            </button>
-            <span className="text-gray-400 text-sm">
-              {exercisePage + 1} / {totalPages}
-            </span>
-            <button
-              onClick={() =>
-                setExercisePage((p) => Math.min(totalPages - 1, p + 1))
-              }
-              disabled={exercisePage === totalPages - 1}
-              className="px-3 py-1 rounded-md bg-[#2a2a2a] text-white disabled:opacity-30 hover:bg-[#3a3a3a] transition"
-            >
-              →
-            </button>
-          </div>
-        )}
+        <ExerciseList
+          exercises={exercises}
+          onAdd={(name) =>
+            setWorkout((prev) => ({
+              ...prev,
+              exercises: [
+                ...prev.exercises,
+                { id: Date.now(), name, sets: [] },
+              ],
+            }))
+          }
+        />
 
         <CustomExerciseCard onAdd={addCustomExercise} />
       </div>
