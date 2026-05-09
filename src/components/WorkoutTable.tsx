@@ -6,7 +6,7 @@ import { Trash2 } from 'lucide-react';
 interface IWorkoutProps {
   exercise: Exercise;
   onSetsChange?: (exerciseId: number, sets: WorkoutSet[]) => void;
-  deleteSet: () => void;
+  onDelete: () => void;
 }
 
 interface Exercise {
@@ -18,7 +18,7 @@ interface Exercise {
 export default function WorkoutTable({
   exercise,
   onSetsChange,
-  deleteSet,
+  onDelete,
 }: IWorkoutProps) {
   const sets = exercise.sets;
 
@@ -66,13 +66,9 @@ export default function WorkoutTable({
         </h1>
         <Trash2
           className="stroke-[#cafd00] hover:cursor-pointer"
-          onClick={deleteSet}
+          onClick={onDelete}
         />
       </div>
-
-      {/* <div className="text-xs text-gray-300/80 font-semibold mt-1">
-        Last Session: 100kg x 8
-      </div> */}
 
       {/* HEADER */}
       <div className="grid grid-cols-5 text-xs text-gray-400 mt-4 mb-2 px-2">

@@ -7,7 +7,6 @@ interface ITagPillProps {
 export default function TagPill({ name, selected, onToggle }: ITagPillProps) {
   return (
     <button
-      key={name}
       onClick={() => onToggle(name)}
       className={`px-3 py-1 rounded-full text-sm transition ${
         selected

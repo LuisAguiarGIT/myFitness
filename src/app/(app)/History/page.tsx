@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import ActivityCard from '@/components/ActivityCard';
 import TemplateModal from '@/components/TemplateModal';
 import { WorkoutSummary } from '@/types/workout';
+import { API_MODULES } from '@/lib/constants';
 
 export default function History() {
   const [workouts, setWorkouts] = useState<WorkoutSummary[]>([]);
@@ -12,7 +13,7 @@ export default function History() {
   );
 
   useEffect(() => {
-    fetch('/api/getRecentWorkouts?limit=7')
+    fetch(`/${API_MODULES.getRecentWorkouts}?limit=7`)
       .then((res) => res.json())
       .then((data) => setWorkouts(data));
   }, []);

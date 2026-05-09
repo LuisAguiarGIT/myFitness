@@ -9,8 +9,7 @@ import { useWorkout } from '../../hooks/useWorkout';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { getWorkoutParams } from '@/lib/workoutParams';
-import { useExercises } from '@/app/hooks/useExercises';
-import { IExercise } from '@/app/hooks/useExercises';
+import { useExercises, IExercise } from '@/app/hooks/useExercises';
 import { useWorkoutSubmit } from '@/app/hooks/useWorkoutSubmit';
 import ExerciseList from '@/components/ExerciseList';
 
@@ -45,7 +44,7 @@ export default function WorkoutLog() {
         })),
       }));
     }
-  }, [tags, template, setWorkout]);
+  }, [tags, template]);
 
   const { seconds, isRunning, toggleTimer } = useWorkoutTimer();
 
@@ -91,7 +90,7 @@ export default function WorkoutLog() {
             key={exercise.id}
             exercise={exercise}
             onSetsChange={handleSetsChange}
-            deleteSet={() =>
+            onDelete={() =>
               setWorkout((prev) => ({
                 ...prev,
                 exercises: prev.exercises.filter((e) => e.id !== exercise.id),
