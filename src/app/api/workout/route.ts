@@ -2,8 +2,8 @@ import prisma from '@/lib/prisma';
 import logger from '@/lib/logger';
 import { withAuth } from '@/lib/withAuth';
 import { API_MODULES } from '@/lib/constants';
+import { WorkoutExercise, WorkoutSet } from '@/types/workout';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function POST(req: Request) {
   const log = logger.child({ module: API_MODULES.workout });
 
@@ -12,6 +12,32 @@ export async function POST(req: Request) {
     const { name, focus, durationSeconds, exercises } = body;
 
     try {
+      // const workout = await prisma.workout.create({
+      //   data: {
+      //     name,
+      //     focus,
+      //     durationSeconds,
+      //     userId: session.user.id,
+      //     exercises: {
+      //       create: exercises.map((exercise: any) => ({
+      //         name: exercise.name,
+      //         sets: {
+      //           create: exercise.sets.map((set: any) => ({
+      //             reps: parseInt(set.reps),
+      //             weight: parseInt(set.weight),
+      //           })),
+      //         },
+      //       })),
+      //     },
+      //   },
+      //   include: {
+      //     exercises: {
+      //       include: {
+      //         sets: true,
+      //       },
+      //     },
+      //   },
+      // });
       const workout = await prisma.workout.create({
         data: {
           name,
@@ -19,12 +45,12 @@ export async function POST(req: Request) {
           durationSeconds,
           userId: session.user.id,
           exercises: {
-            create: exercises.map((exercise: any) => ({
+            create: exercises.map((exercise: WorkoutExercise) => ({
               name: exercise.name,
               sets: {
-                create: exercise.sets.map((set: any) => ({
-                  reps: parseInt(set.reps),
-                  weight: parseInt(set.weight),
+                create: exercise.sets.map((set: WorkoutSet) => ({
+                  reps: set.reps,
+                  weight: set.weight,
                 })),
               },
             })),
