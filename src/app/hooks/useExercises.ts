@@ -15,7 +15,6 @@ export function useExercises(tags?: string) {
     const url = tags
       ? `/api/getExercisesByTags?tags=${tags}`
       : '/api/getAllExercises';
-
     fetch(url)
       .then((res) => res.json())
       .then((data) =>

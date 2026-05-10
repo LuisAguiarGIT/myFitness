@@ -2,17 +2,12 @@
 
 import { WorkoutSet } from '@/types/workout';
 import { Trash2 } from 'lucide-react';
+import { WorkoutExercise } from '@/types/workout';
 
 interface IWorkoutProps {
-  exercise: Exercise;
+  exercise: WorkoutExercise;
   onSetsChange?: (exerciseId: number, sets: WorkoutSet[]) => void;
   deleteSet: () => void;
-}
-
-interface Exercise {
-  id: number;
-  name: string;
-  sets: WorkoutSet[];
 }
 
 export default function WorkoutTable({

@@ -1,3 +1,10 @@
+export type WorkoutDetail = {
+  id: string;
+  name: string;
+  focus: string;
+  exercises: WorkoutExercise[];
+};
+
 export type WorkoutSet = {
   set: number;
   previous: string;

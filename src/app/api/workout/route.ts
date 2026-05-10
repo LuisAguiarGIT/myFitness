@@ -12,32 +12,6 @@ export async function POST(req: Request) {
     const { name, focus, durationSeconds, exercises } = body;
 
     try {
-      // const workout = await prisma.workout.create({
-      //   data: {
-      //     name,
-      //     focus,
-      //     durationSeconds,
-      //     userId: session.user.id,
-      //     exercises: {
-      //       create: exercises.map((exercise: any) => ({
-      //         name: exercise.name,
-      //         sets: {
-      //           create: exercise.sets.map((set: any) => ({
-      //             reps: parseInt(set.reps),
-      //             weight: parseInt(set.weight),
-      //           })),
-      //         },
-      //       })),
-      //     },
-      //   },
-      //   include: {
-      //     exercises: {
-      //       include: {
-      //         sets: true,
-      //       },
-      //     },
-      //   },
-      // });
       const workout = await prisma.workout.create({
         data: {
           name,
@@ -64,6 +38,10 @@ export async function POST(req: Request) {
           },
         },
       });
+
+      log.info(
+        'Created workout with the following data: \n' + JSON.stringify(workout),
+      );
 
       return Response.json(workout, { status: 201 });
     } catch (e) {

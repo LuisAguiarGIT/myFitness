@@ -13,7 +13,7 @@ export default function History() {
   );
 
   useEffect(() => {
-    fetch(`/${API_MODULES.getRecentWorkouts}?limit=7`)
+    fetch(`${API_MODULES.getRecentWorkouts}?limit=7`)
       .then((res) => res.json())
       .then((data) => setWorkouts(data));
   }, []);

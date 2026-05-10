@@ -1,22 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
-interface ISet {
-  reps: number;
-  weight: number;
-}
-interface IExercise {
-  id: string;
-  name: string;
-  sets: ISet[];
-}
-interface IWorkout {
-  id: string;
-  name: string;
-  focus: string;
-  exercises: IExercise[];
-}
+import { WorkoutDetail } from '@/types/workout';
 
 interface ITemplateModalProps {
   workoutId: string;
@@ -28,7 +13,7 @@ export default function TemplateModal({
   onClose,
 }: ITemplateModalProps) {
   const router = useRouter();
-  const [workout, setWorkout] = useState<IWorkout | null>(null);
+  const [workout, setWorkout] = useState<WorkoutDetail | null>(null);
   const [workoutName, setWorkoutName] = useState('');
 
   useEffect(() => {
@@ -46,9 +31,13 @@ export default function TemplateModal({
       JSON.stringify(
         workout.exercises.map((e) => ({
           name: e.name,
-          sets: e.sets.length,
-          reps: e.sets[0]?.reps ?? 10,
-          weight: e.sets[0]?.weight ?? 0,
+          sets: e.sets.map((s, i) => ({
+            set: i + 1,
+            previous: `${s.weight} kg x ${s.reps}`,
+            reps: s.reps,
+            weight: s.weight ?? 0,
+            done: false,
+          })),
         })),
       ),
     );

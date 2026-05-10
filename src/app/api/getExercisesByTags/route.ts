@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma';
 import logger from '@/lib/logger';
 import { withAuth } from '@/lib/withAuth';
 import { API_MODULES } from '@/lib/constants';
+import { formatExercise } from '@/lib/formatters/exercise';
 
 export async function GET(request: Request) {
   const log = logger.child({ module: API_MODULES.getExercisesByTags });
@@ -35,13 +36,7 @@ export async function GET(request: Request) {
         },
       });
 
-      const clean = exercises.map((ex) => ({
-        id: ex.id,
-        name: ex.name,
-        sets: ex.sets,
-        reps: ex.reps,
-        tags: ex.tags.map((t) => t.tag.name),
-      }));
+      const clean = exercises.map(formatExercise);
 
       return Response.json(clean);
     } catch (e) {

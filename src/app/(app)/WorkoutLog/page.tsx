@@ -12,6 +12,7 @@ import { getWorkoutParams } from '@/lib/workoutParams';
 import { useExercises, IExercise } from '@/app/hooks/useExercises';
 import { useWorkoutSubmit } from '@/app/hooks/useWorkoutSubmit';
 import ExerciseList from '@/components/ExerciseList';
+import { WorkoutSet } from '@/types/workout';
 
 export default function WorkoutLog() {
   const params = useSearchParams();
@@ -32,16 +33,13 @@ export default function WorkoutLog() {
       const parsed = JSON.parse(decodeURIComponent(template));
       setWorkout((prev) => ({
         ...prev,
-        exercises: parsed.map((e: IExercise, i: number) => ({
-          id: Date.now() + i,
-          name: e.name,
-          sets: Array.from({ length: e.sets }, (_, i) => ({
-            set: i + 1,
-            previous: `${e.weight} kg x ${e.reps}`,
-            reps: e.reps,
-            weight: e.weight ?? 0,
-          })),
-        })),
+        exercises: parsed.map(
+          (e: { name: string; sets: WorkoutSet[] }, i: number) => ({
+            id: Date.now() + i,
+            name: e.name,
+            sets: e.sets,
+          }),
+        ),
       }));
     }
   }, [tags, template]);
@@ -85,19 +83,21 @@ export default function WorkoutLog() {
           {focus}
         </h2>
 
-        {workout.exercises.map((exercise) => (
-          <WorkoutTable
-            key={exercise.id}
-            exercise={exercise}
-            onSetsChange={handleSetsChange}
-            deleteSet={() =>
-              setWorkout((prev) => ({
-                ...prev,
-                exercises: prev.exercises.filter((e) => e.id !== exercise.id),
-              }))
-            }
-          />
-        ))}
+        {workout.exercises.map((exercise) => {
+          return (
+            <WorkoutTable
+              key={exercise.id}
+              exercise={exercise}
+              onSetsChange={handleSetsChange}
+              deleteSet={() =>
+                setWorkout((prev) => ({
+                  ...prev,
+                  exercises: prev.exercises.filter((e) => e.id !== exercise.id),
+                }))
+              }
+            />
+          );
+        })}
 
         <SubmitButton submit={submitCurrentWorkout} />
 
