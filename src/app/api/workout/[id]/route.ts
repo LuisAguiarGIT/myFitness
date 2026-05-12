@@ -27,8 +27,6 @@ export async function GET(
         return Response.json({ error: 'Not found' }, { status: 404 });
       }
 
-      log.info('Retrieved \n' + JSON.stringify(workout));
-
       return Response.json(workout);
     } catch (e) {
       log.error({ err: e, id }, 'Failed to get workout');

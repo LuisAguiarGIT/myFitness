@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import ActivityCard from '@/components/ActivityCard';
+import HistoryCard from '@/components/HistoryCard';
 import TemplateModal from '@/components/TemplateModal';
 import { WorkoutSummary } from '@/types/workout';
 import { API_MODULES } from '@/lib/constants';
@@ -29,7 +29,7 @@ export default function History() {
       <div className="w-full md:w-2/3 bg-foreground rounded-xl p-6">
         <h1 className="text-2xl font-semibold mb-4">History</h1>
         {workouts.map((workout, i) => (
-          <ActivityCard
+          <HistoryCard
             key={i}
             id={workout.id}
             name={workout.name}

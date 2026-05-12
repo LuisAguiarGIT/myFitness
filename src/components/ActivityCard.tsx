@@ -1,5 +1,3 @@
-import '@/app/globals.css';
-
 interface IActivityCardProps {
   id: string;
   name: string;
