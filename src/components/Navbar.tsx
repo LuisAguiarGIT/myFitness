@@ -36,7 +36,7 @@ export default function Navbar() {
               className="border-2 border-[#cafd00] rounded-lg cursor-pointer"
             />
             <h1 className="italic text-2xl font-bold ml-4 text-[#cafd00]">
-              MY FITNESS
+              myFitness
             </h1>
           </div>
           <div className="flex items-center gap-2">
